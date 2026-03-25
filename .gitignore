@@ -7,3 +7,30 @@ build/
 .pytest_cache/
 .DS_Store
 Thumbs.db
+
+# Environment
+.env
+.env.*
+
+# PyInstaller
+*.spec
+
+# Eggs
+.eggs/
+
+# Coverage
+htmlcov/
+.coverage
+
+# Compiled QuantaLang
+*.obj
+
+# Executables
+*.exe
+
+# Claude
+.claude/settings.local.json
+CLAUDE.local.md
+
+# Node
+node_modules/

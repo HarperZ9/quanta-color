@@ -21,11 +21,16 @@ classifiers = [
     "Topic :: Multimedia :: Graphics",
 ]
 
+[project.urls]
+Homepage = "https://github.com/HarperZ9/quanta-color"
+Repository = "https://github.com/HarperZ9/quanta-color"
+Issues = "https://github.com/HarperZ9/quanta-color/issues"
+
 [project.scripts]
 quanta-color = "quanta_color.cli:main"
 
 [project.optional-dependencies]
-gui = ["PyQt6>=6.5,<7"]
+gui = ["PyQt6>=6.5,<7", "quanta-ui>=1.0.0"]
 all = ["scipy>=1.10,<2", "Pillow>=10.0,<11", "PyQt6>=6.5,<7"]
 
 [tool.setuptools.packages.find]
