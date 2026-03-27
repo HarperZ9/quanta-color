@@ -427,11 +427,12 @@ def rgb_to_hsv(rgb: np.ndarray) -> np.ndarray:
     cmin = np.minimum(np.minimum(r, g), b)
     delta = cmax - cmin
 
-    h = np.where(delta == 0, 0,
-        np.where(cmax == r, 60 * (((g - b) / delta) % 6),
-        np.where(cmax == g, 60 * ((b - r) / delta + 2),
-                             60 * ((r - g) / delta + 4))))
-    s = np.where(cmax == 0, 0, delta / cmax)
+    with np.errstate(divide='ignore', invalid='ignore'):
+        h = np.where(delta == 0, 0,
+            np.where(cmax == r, 60 * (((g - b) / delta) % 6),
+            np.where(cmax == g, 60 * ((b - r) / delta + 2),
+                                 60 * ((r - g) / delta + 4))))
+        s = np.where(cmax == 0, 0, delta / cmax)
     v = cmax
     return np.stack([h, s, v], axis=-1)
 

@@ -190,11 +190,12 @@ _HLG_C = 0.55991073
 def hlg_oetf(E: np.ndarray) -> np.ndarray:
     """HLG OETF: linear [0,1] -> HLG signal [0,1]."""
     E = np.clip(np.asarray(E, dtype=np.float64), 0, 1)
-    return np.where(
-        E <= 1.0 / 12.0,
-        np.sqrt(3.0 * E),
-        _HLG_A * np.log(12.0 * E - _HLG_B) + _HLG_C,
-    )
+    with np.errstate(divide='ignore', invalid='ignore'):
+        return np.where(
+            E <= 1.0 / 12.0,
+            np.sqrt(3.0 * E),
+            _HLG_A * np.log(12.0 * E - _HLG_B) + _HLG_C,
+        )
 
 
 def hlg_eotf(E: np.ndarray) -> np.ndarray:
