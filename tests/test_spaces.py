@@ -1,6 +1,7 @@
 """Comprehensive tests for color space conversions."""
 import numpy as np
 import pytest
+
 from quanta_color.spaces import (
     D50,
     D65,

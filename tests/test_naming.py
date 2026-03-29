@@ -1,5 +1,6 @@
 """Tests for color naming module."""
 import numpy as np
+
 from quanta_color.naming import (
     CSS_COLORS,
     all_css_colors,

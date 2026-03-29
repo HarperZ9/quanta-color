@@ -1,6 +1,7 @@
 """Comprehensive tests for gamut mapping."""
 import numpy as np
 import pytest
+
 from quanta_color.gamut import (
     clip,
     compress,

@@ -1,6 +1,7 @@
 """Comprehensive tests for color difference metrics."""
 import numpy as np
 import pytest
+
 from quanta_color.difference import (
     compare_all,
     contrast_ratio,

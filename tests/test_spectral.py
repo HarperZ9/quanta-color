@@ -1,6 +1,7 @@
 """Comprehensive tests for spectral rendering."""
 import numpy as np
 import pytest
+
 from quanta_color.spectral import (
     CMF_WAVELENGTHS,
     CMF_X,

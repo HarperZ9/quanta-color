@@ -1,6 +1,7 @@
 """Comprehensive tests for chromatic adaptation transforms."""
 import numpy as np
 import pytest
+
 from quanta_color.adaptation import (
     ILLUMINANTS,
     MATRICES,

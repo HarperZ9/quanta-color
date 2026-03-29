@@ -1,6 +1,7 @@
 """Comprehensive tests for color harmony generation."""
 import numpy as np
 import pytest
+
 from quanta_color.harmony import (
     SCHEMES,
     analogous,

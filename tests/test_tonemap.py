@@ -1,6 +1,7 @@
 """Comprehensive tests for tone mapping operators."""
 import numpy as np
 import pytest
+
 from quanta_color.tonemap import (
     OPERATORS,
     aces_filmic,

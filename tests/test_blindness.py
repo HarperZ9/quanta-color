@@ -1,6 +1,7 @@
 """Comprehensive tests for color vision deficiency simulation."""
 import numpy as np
 import pytest
+
 from quanta_color.blindness import (
     DEFICIENCY_TYPES,
     error_map,
