@@ -128,9 +128,16 @@ class SettingsPage(QWidget):
         module_grid.setSpacing(6)
 
         module_names = [
-            "spaces", "tonemap", "appearance", "difference",
-            "adaptation", "spectral", "icc", "blindness",
-            "gamut", "harmony",
+            "spaces",
+            "tonemap",
+            "appearance",
+            "difference",
+            "adaptation",
+            "spectral",
+            "icc",
+            "blindness",
+            "gamut",
+            "harmony",
         ]
         for i, name in enumerate(module_names):
             row, col = divmod(i, 5)
@@ -138,8 +145,7 @@ class SettingsPage(QWidget):
             dot_color = C.GREEN if status else C.RED
             lbl = QLabel(f"\u25cf {name}")
             lbl.setStyleSheet(
-                f"font-size: 11px; color: {dot_color}; "
-                f"font-family: 'Cascadia Code', 'Consolas', monospace;"
+                f"font-size: 11px; color: {dot_color}; font-family: 'Cascadia Code', 'Consolas', monospace;"
             )
             module_grid.addWidget(lbl, row, col)
 

@@ -1,4 +1,5 @@
 """Comprehensive tests for tone mapping operators."""
+
 import numpy as np
 import pytest
 
@@ -25,7 +26,11 @@ from quanta_color.tonemap import (
 
 # All simple tone mapping operators (input -> [0,1])
 SIMPLE_OPERATORS = [
-    reinhard, aces_filmic, aces_hill, lottes, uchimura,
+    reinhard,
+    aces_filmic,
+    aces_hill,
+    lottes,
+    uchimura,
 ]
 
 # Operators that need default params and should also preserve zero
@@ -36,6 +41,7 @@ ALL_TMO_NAMES = list(OPERATORS.keys())
 # Black preservation: input 0 -> output 0
 # =========================================================================
 
+
 class TestBlackPreservation:
     """Every tone mapper should map 0 to 0 (or very close)."""
 
@@ -43,13 +49,13 @@ class TestBlackPreservation:
     def test_zero_input(self, name):
         fn = get_operator(name)
         result = fn(np.array([0.0]))
-        assert result[0] == pytest.approx(0.0, abs=0.02), \
-            f"{name} did not preserve black: got {result[0]}"
+        assert result[0] == pytest.approx(0.0, abs=0.02), f"{name} did not preserve black: got {result[0]}"
 
 
 # =========================================================================
 # Monotonicity: larger input -> larger output
 # =========================================================================
+
 
 class TestMonotonicity:
     """Every operator should be monotonically non-decreasing for non-negative input."""
@@ -84,13 +90,21 @@ class TestMonotonicity:
 # Output clamping to [0, 1]
 # =========================================================================
 
+
 class TestOutputRange:
     """Operators that explicitly clamp should produce output in [0,1]."""
 
     # These operators explicitly clamp or naturally stay in [0,1]:
     CLAMPED_OPERATORS = [
-        "reinhard", "aces", "aces_hill", "hable", "lottes",
-        "uchimura", "agx", "pbr_neutral", "bt2446",
+        "reinhard",
+        "aces",
+        "aces_hill",
+        "hable",
+        "lottes",
+        "uchimura",
+        "agx",
+        "pbr_neutral",
+        "bt2446",
     ]
 
     @pytest.mark.parametrize("name", CLAMPED_OPERATORS)
@@ -118,6 +132,7 @@ class TestOutputRange:
 # PQ roundtrip
 # =========================================================================
 
+
 class TestPQRoundtrip:
     """PQ encode/decode roundtrip at key luminance levels."""
 
@@ -125,8 +140,7 @@ class TestPQRoundtrip:
     def test_roundtrip(self, nits):
         encoded = pq_oetf(np.array([nits]))
         decoded = pq_eotf(encoded)
-        np.testing.assert_allclose(decoded[0], nits, atol=0.1,
-                                   err_msg=f"PQ roundtrip failed at {nits} nits")
+        np.testing.assert_allclose(decoded[0], nits, atol=0.1, err_msg=f"PQ roundtrip failed at {nits} nits")
 
     def test_pq_oetf_range(self):
         """PQ output should be in [0, 1]."""
@@ -153,6 +167,7 @@ class TestPQRoundtrip:
 # HLG roundtrip
 # =========================================================================
 
+
 class TestHLGRoundtrip:
     """HLG encode/decode roundtrip."""
 
@@ -160,8 +175,7 @@ class TestHLGRoundtrip:
     def test_roundtrip(self, val):
         encoded = hlg_oetf(np.array([val]))
         decoded = hlg_eotf(encoded)
-        assert decoded[0] == pytest.approx(val, abs=1e-6), \
-            f"HLG roundtrip failed at {val}"
+        assert decoded[0] == pytest.approx(val, abs=1e-6), f"HLG roundtrip failed at {val}"
 
     def test_hlg_oetf_range(self):
         linear = np.linspace(0, 1, 50)
@@ -180,6 +194,7 @@ class TestHLGRoundtrip:
 # BT.2390 EETF
 # =========================================================================
 
+
 class TestBT2390:
     """ITU-R BT.2390 EETF tests."""
 
@@ -189,8 +204,7 @@ class TestBT2390:
         target_peak = 1000.0
         hdr = np.array([source_peak])
         result = bt2390_eetf(hdr, source_peak=source_peak, target_peak=target_peak)
-        assert result[0] <= target_peak + 50, \
-            f"BT.2390 output {result[0]} exceeds target {target_peak}"
+        assert result[0] <= target_peak + 50, f"BT.2390 output {result[0]} exceeds target {target_peak}"
 
     def test_low_values_pass_through(self):
         """Low luminance values should be relatively unchanged."""
@@ -224,6 +238,7 @@ class TestBT2390:
 # BT.2446 Method A
 # =========================================================================
 
+
 class TestBT2446:
     """ITU-R BT.2446 Method A tests."""
 
@@ -249,6 +264,7 @@ class TestBT2446:
 # AgX looks
 # =========================================================================
 
+
 class TestAgX:
     """AgX tone mapping with different looks."""
 
@@ -257,8 +273,7 @@ class TestAgX:
         x = np.array([0.5])
         neutral = agx(x, look="neutral")
         punchy = agx(x, look="punchy")
-        assert not np.allclose(neutral, punchy), \
-            "AgX neutral and punchy should differ"
+        assert not np.allclose(neutral, punchy), "AgX neutral and punchy should differ"
 
     def test_golden_modifies_rgb(self):
         """Golden look should modify per-channel differently."""
@@ -280,6 +295,7 @@ class TestAgX:
 # =========================================================================
 # Knee function
 # =========================================================================
+
 
 class TestKnee:
     """Custom knee function tests."""
@@ -305,6 +321,7 @@ class TestKnee:
 # All operators accept numpy arrays
 # =========================================================================
 
+
 class TestArrayAcceptance:
     """All operators should accept and return numpy arrays."""
 
@@ -326,6 +343,7 @@ class TestArrayAcceptance:
 # =========================================================================
 # Utility functions
 # =========================================================================
+
 
 class TestUtility:
     """Test list_operators and get_operator."""

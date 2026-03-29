@@ -5,7 +5,6 @@ Comprehensive color analysis tool with bidirectional input controls,
 multi-space conversion, CVD simulation, and color difference metrics.
 """
 
-
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import (
     QGridLayout,
@@ -23,29 +22,66 @@ from quanta_color.gui.widgets.color_swatch import ColorSwatch
 
 # CSS named colors for nearest-name fallback
 _CSS_COLORS = {
-    "black": (0, 0, 0), "white": (255, 255, 255), "red": (255, 0, 0),
-    "lime": (0, 255, 0), "blue": (0, 0, 255), "yellow": (255, 255, 0),
-    "cyan": (0, 255, 255), "magenta": (255, 0, 255), "silver": (192, 192, 192),
-    "gray": (128, 128, 128), "maroon": (128, 0, 0), "olive": (128, 128, 0),
-    "green": (0, 128, 0), "purple": (128, 0, 128), "teal": (0, 128, 128),
-    "navy": (0, 0, 128), "orange": (255, 165, 0), "coral": (255, 127, 80),
-    "salmon": (250, 128, 114), "gold": (255, 215, 0), "khaki": (240, 230, 140),
-    "orchid": (218, 112, 214), "plum": (221, 160, 221), "violet": (238, 130, 238),
-    "indigo": (75, 0, 130), "tomato": (255, 99, 71), "sienna": (160, 82, 45),
-    "chocolate": (210, 105, 30), "peru": (205, 133, 63), "tan": (210, 180, 140),
-    "pink": (255, 192, 203), "crimson": (220, 20, 60), "linen": (250, 240, 230),
-    "beige": (245, 245, 220), "ivory": (255, 255, 240), "snow": (255, 250, 250),
-    "honeydew": (240, 255, 240), "azure": (240, 255, 255), "lavender": (230, 230, 250),
-    "wheat": (245, 222, 179), "cornsilk": (255, 248, 220), "bisque": (255, 228, 196),
-    "mistyrose": (255, 228, 225), "seashell": (255, 245, 238),
-    "mintcream": (245, 255, 250), "slategray": (112, 128, 144),
-    "steelblue": (70, 130, 180), "royalblue": (65, 105, 225),
-    "dodgerblue": (30, 144, 255), "skyblue": (135, 206, 235),
-    "turquoise": (64, 224, 208), "springgreen": (0, 255, 127),
-    "limegreen": (50, 205, 50), "forestgreen": (34, 139, 34),
-    "darkgreen": (0, 100, 0), "darkred": (139, 0, 0),
-    "firebrick": (178, 34, 34), "rosybrown": (188, 143, 143),
-    "darkgoldenrod": (184, 134, 11), "goldenrod": (218, 165, 32),
+    "black": (0, 0, 0),
+    "white": (255, 255, 255),
+    "red": (255, 0, 0),
+    "lime": (0, 255, 0),
+    "blue": (0, 0, 255),
+    "yellow": (255, 255, 0),
+    "cyan": (0, 255, 255),
+    "magenta": (255, 0, 255),
+    "silver": (192, 192, 192),
+    "gray": (128, 128, 128),
+    "maroon": (128, 0, 0),
+    "olive": (128, 128, 0),
+    "green": (0, 128, 0),
+    "purple": (128, 0, 128),
+    "teal": (0, 128, 128),
+    "navy": (0, 0, 128),
+    "orange": (255, 165, 0),
+    "coral": (255, 127, 80),
+    "salmon": (250, 128, 114),
+    "gold": (255, 215, 0),
+    "khaki": (240, 230, 140),
+    "orchid": (218, 112, 214),
+    "plum": (221, 160, 221),
+    "violet": (238, 130, 238),
+    "indigo": (75, 0, 130),
+    "tomato": (255, 99, 71),
+    "sienna": (160, 82, 45),
+    "chocolate": (210, 105, 30),
+    "peru": (205, 133, 63),
+    "tan": (210, 180, 140),
+    "pink": (255, 192, 203),
+    "crimson": (220, 20, 60),
+    "linen": (250, 240, 230),
+    "beige": (245, 245, 220),
+    "ivory": (255, 255, 240),
+    "snow": (255, 250, 250),
+    "honeydew": (240, 255, 240),
+    "azure": (240, 255, 255),
+    "lavender": (230, 230, 250),
+    "wheat": (245, 222, 179),
+    "cornsilk": (255, 248, 220),
+    "bisque": (255, 228, 196),
+    "mistyrose": (255, 228, 225),
+    "seashell": (255, 245, 238),
+    "mintcream": (245, 255, 250),
+    "slategray": (112, 128, 144),
+    "steelblue": (70, 130, 180),
+    "royalblue": (65, 105, 225),
+    "dodgerblue": (30, 144, 255),
+    "skyblue": (135, 206, 235),
+    "turquoise": (64, 224, 208),
+    "springgreen": (0, 255, 127),
+    "limegreen": (50, 205, 50),
+    "forestgreen": (34, 139, 34),
+    "darkgreen": (0, 100, 0),
+    "darkred": (139, 0, 0),
+    "firebrick": (178, 34, 34),
+    "rosybrown": (188, 143, 143),
+    "darkgoldenrod": (184, 134, 11),
+    "goldenrod": (218, 165, 32),
 }
 
 
@@ -53,6 +89,7 @@ def _nearest_css_name(r: int, g: int, b: int) -> str:
     """Find the closest CSS color name by Euclidean distance."""
     try:
         from quanta_color.naming import nearest_css_name
+
         return nearest_css_name(r, g, b)
     except Exception:
         pass
@@ -152,8 +189,7 @@ class ColorInspectorPage(QWidget):
             val_lbl.setFixedWidth(32)
             val_lbl.setAlignment(Qt.AlignmentFlag.AlignRight)
             val_lbl.setStyleSheet(
-                f"font-size: 12px; color: {C.TEXT}; "
-                f"font-family: 'Cascadia Code', 'Consolas', monospace;"
+                f"font-size: 12px; color: {C.TEXT}; font-family: 'Cascadia Code', 'Consolas', monospace;"
             )
             row.addWidget(val_lbl)
 
@@ -173,8 +209,14 @@ class ColorInspectorPage(QWidget):
         self._space_labels = {}
 
         space_names = [
-            "sRGB", "XYZ", "xyY", "Lab (D65)",
-            "Oklab", "Oklch", "JzAzBz", "HSV",
+            "sRGB",
+            "XYZ",
+            "xyY",
+            "Lab (D65)",
+            "Oklab",
+            "Oklch",
+            "JzAzBz",
+            "HSV",
         ]
         for i, name in enumerate(space_names):
             row, col = divmod(i, 2)
@@ -182,8 +224,7 @@ class ColorInspectorPage(QWidget):
             name_lbl.setStyleSheet(f"font-size: 12px; font-weight: 600; color: {C.TEXT2};")
             val_lbl = QLabel("\u2014")
             val_lbl.setStyleSheet(
-                f"font-size: 12px; color: {C.TEXT}; "
-                f"font-family: 'Cascadia Code', 'Consolas', monospace;"
+                f"font-size: 12px; color: {C.TEXT}; font-family: 'Cascadia Code', 'Consolas', monospace;"
             )
             val_lbl.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse)
             self._space_labels[name] = val_lbl
@@ -202,9 +243,12 @@ class ColorInspectorPage(QWidget):
         self._metric_labels = {}
 
         metric_names = [
-            "Luminance", "Dominant WL",
-            "Contrast (white)", "Contrast (black)",
-            "WCAG Grade", "",
+            "Luminance",
+            "Dominant WL",
+            "Contrast (white)",
+            "Contrast (black)",
+            "WCAG Grade",
+            "",
         ]
         for i, name in enumerate(metric_names):
             if not name:
@@ -214,8 +258,7 @@ class ColorInspectorPage(QWidget):
             n_lbl.setStyleSheet(f"font-size: 12px; font-weight: 600; color: {C.TEXT2};")
             v_lbl = QLabel("\u2014")
             v_lbl.setStyleSheet(
-                f"font-size: 12px; color: {C.TEXT}; "
-                f"font-family: 'Cascadia Code', 'Consolas', monospace;"
+                f"font-size: 12px; color: {C.TEXT}; font-family: 'Cascadia Code', 'Consolas', monospace;"
             )
             self._metric_labels[name] = v_lbl
             self._metrics_grid.addWidget(n_lbl, row, col * 2)
@@ -281,8 +324,7 @@ class ColorInspectorPage(QWidget):
             n_lbl.setStyleSheet(f"font-size: 12px; font-weight: 600; color: {C.TEXT2};")
             v_lbl = QLabel("\u2014")
             v_lbl.setStyleSheet(
-                f"font-size: 13px; color: {C.TEXT}; "
-                f"font-family: 'Cascadia Code', 'Consolas', monospace;"
+                f"font-size: 13px; color: {C.TEXT}; font-family: 'Cascadia Code', 'Consolas', monospace;"
             )
             self._diff_labels[name] = v_lbl
             self._diff_grid.addWidget(n_lbl, row, col * 2)
@@ -366,37 +408,31 @@ class ColorInspectorPage(QWidget):
             import numpy as np
 
             from quanta_color import spaces
+
             srgb = np.array([r, g, b])
 
             self._space_labels["sRGB"].setText(f"({r:.3f}, {g:.3f}, {b:.3f})")
 
             xyz = spaces.srgb_to_xyz(srgb)
-            self._space_labels["XYZ"].setText(
-                f"({xyz[0]:.4f}, {xyz[1]:.4f}, {xyz[2]:.4f})")
+            self._space_labels["XYZ"].setText(f"({xyz[0]:.4f}, {xyz[1]:.4f}, {xyz[2]:.4f})")
 
             xyY = spaces.xyz_to_xyY(xyz)
-            self._space_labels["xyY"].setText(
-                f"({xyY[0]:.4f}, {xyY[1]:.4f}, {xyY[2]:.4f})")
+            self._space_labels["xyY"].setText(f"({xyY[0]:.4f}, {xyY[1]:.4f}, {xyY[2]:.4f})")
 
             lab = spaces.xyz_to_lab(xyz, white=spaces.D65)
-            self._space_labels["Lab (D65)"].setText(
-                f"({lab[0]:.2f}, {lab[1]:.2f}, {lab[2]:.2f})")
+            self._space_labels["Lab (D65)"].setText(f"({lab[0]:.2f}, {lab[1]:.2f}, {lab[2]:.2f})")
 
             oklab = spaces.srgb_to_oklab(srgb)
-            self._space_labels["Oklab"].setText(
-                f"({oklab[0]:.4f}, {oklab[1]:.4f}, {oklab[2]:.4f})")
+            self._space_labels["Oklab"].setText(f"({oklab[0]:.4f}, {oklab[1]:.4f}, {oklab[2]:.4f})")
 
             oklch = spaces.oklab_to_oklch(oklab)
-            self._space_labels["Oklch"].setText(
-                f"({oklch[0]:.4f}, {oklch[1]:.4f}, {oklch[2]:.1f})")
+            self._space_labels["Oklch"].setText(f"({oklch[0]:.4f}, {oklch[1]:.4f}, {oklch[2]:.1f})")
 
             jzazbz = spaces.xyz_to_jzazbz(xyz)
-            self._space_labels["JzAzBz"].setText(
-                f"({jzazbz[0]:.4f}, {jzazbz[1]:.4f}, {jzazbz[2]:.4f})")
+            self._space_labels["JzAzBz"].setText(f"({jzazbz[0]:.4f}, {jzazbz[1]:.4f}, {jzazbz[2]:.4f})")
 
             hsv = spaces.rgb_to_hsv(srgb)
-            self._space_labels["HSV"].setText(
-                f"({hsv[0]:.1f}\u00b0, {hsv[1]:.1%}, {hsv[2]:.1%})")
+            self._space_labels["HSV"].setText(f"({hsv[0]:.1f}\u00b0, {hsv[1]:.1%}, {hsv[2]:.1%})")
 
         except Exception:
             for lbl in self._space_labels.values():
@@ -421,6 +457,7 @@ class ColorInspectorPage(QWidget):
             # Simplified dominant wavelength from chromaticity
             if y > 0:
                 import math
+
                 angle = math.atan2(y - 0.3333, x - 0.3333)
                 wl = 475 + (angle + math.pi) / (2 * math.pi) * 300
                 wl = wl % 700
@@ -468,9 +505,7 @@ class ColorInspectorPage(QWidget):
             ]:
                 sim = simulate(srgb, deficiency, severity=1.0)
                 sim = np.clip(sim, 0.0, 1.0)
-                self._cvd_swatches[label].set_color(
-                    float(sim[0]), float(sim[1]), float(sim[2])
-                )
+                self._cvd_swatches[label].set_color(float(sim[0]), float(sim[1]), float(sim[2]))
         except Exception:
             for label in ["Protan", "Deutan", "Tritan"]:
                 self._cvd_swatches[label].set_color(r, g, b)

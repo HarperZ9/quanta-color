@@ -74,8 +74,7 @@ class ImageAnalyzerPage(QWidget):
 
         self._path_label = QLabel("No image loaded")
         self._path_label.setStyleSheet(
-            f"font-size: 12px; color: {C.TEXT3}; "
-            f"font-family: 'Cascadia Code', 'Consolas', monospace;"
+            f"font-size: 12px; color: {C.TEXT3}; font-family: 'Cascadia Code', 'Consolas', monospace;"
         )
         self._path_label.setWordWrap(True)
         open_lay.addWidget(self._path_label, stretch=1)
@@ -109,8 +108,7 @@ class ImageAnalyzerPage(QWidget):
             n_lbl.setStyleSheet(f"font-size: 12px; font-weight: 600; color: {C.TEXT2};")
             v_lbl = QLabel("\u2014")
             v_lbl.setStyleSheet(
-                f"font-size: 13px; color: {C.TEXT}; "
-                f"font-family: 'Cascadia Code', 'Consolas', monospace;"
+                f"font-size: 13px; color: {C.TEXT}; font-family: 'Cascadia Code', 'Consolas', monospace;"
             )
             self._info_labels[name] = v_lbl
             self._info_grid.addWidget(n_lbl, i, 0)
@@ -176,11 +174,10 @@ class ImageAnalyzerPage(QWidget):
 
     def _load_info(self, path: str):
         import os
+
         pixmap = QPixmap(path)
         if not pixmap.isNull():
-            self._info_labels["Dimensions"].setText(
-                f"{pixmap.width()} \u00d7 {pixmap.height()} px"
-            )
+            self._info_labels["Dimensions"].setText(f"{pixmap.width()} \u00d7 {pixmap.height()} px")
 
         # Detect format from extension
         ext = os.path.splitext(path)[1].upper().lstrip(".")
@@ -216,9 +213,7 @@ class ImageAnalyzerPage(QWidget):
             import numpy as np
             from PIL import Image
         except ImportError:
-            self._analysis_status.setText(
-                "Install Pillow for image analysis:  pip install Pillow"
-            )
+            self._analysis_status.setText("Install Pillow for image analysis:  pip install Pillow")
             self._analysis_card.setVisible(True)
             return
 
@@ -236,13 +231,12 @@ class ImageAnalyzerPage(QWidget):
 
             # K-means-like: find 6 cluster centers
             from collections import Counter
+
             quantized = (small_arr // 32) * 32 + 16
             tuples = [tuple(row) for row in quantized.tolist()]
             common = Counter(tuples).most_common(6)
 
-            self._analysis_status.setText(
-                f"Analyzed {pixel_count:,} pixels  \u2014  Top dominant colors:"
-            )
+            self._analysis_status.setText(f"Analyzed {pixel_count:,} pixels  \u2014  Top dominant colors:")
 
             for rgb_tuple, _count in common:
                 col_layout = QVBoxLayout()
@@ -250,13 +244,10 @@ class ImageAnalyzerPage(QWidget):
                 sw = ColorSwatch(48, 48)
                 sw.set_color(rgb_tuple[0] / 255.0, rgb_tuple[1] / 255.0, rgb_tuple[2] / 255.0)
                 col_layout.addWidget(sw, alignment=Qt.AlignmentFlag.AlignCenter)
-                hex_lbl = QLabel(
-                    f"#{int(rgb_tuple[0]):02x}{int(rgb_tuple[1]):02x}{int(rgb_tuple[2]):02x}"
-                )
+                hex_lbl = QLabel(f"#{int(rgb_tuple[0]):02x}{int(rgb_tuple[1]):02x}{int(rgb_tuple[2]):02x}")
                 hex_lbl.setAlignment(Qt.AlignmentFlag.AlignCenter)
                 hex_lbl.setStyleSheet(
-                    f"font-size: 10px; color: {C.TEXT2}; "
-                    f"font-family: 'Cascadia Code', 'Consolas', monospace;"
+                    f"font-size: 10px; color: {C.TEXT2}; font-family: 'Cascadia Code', 'Consolas', monospace;"
                 )
                 col_layout.addWidget(hex_lbl)
                 self._dominant_row.addLayout(col_layout)

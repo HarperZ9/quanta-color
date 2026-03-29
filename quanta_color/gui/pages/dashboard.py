@@ -111,8 +111,7 @@ class DashboardPage(QWidget):
         )
         modules_lbl.setWordWrap(True)
         modules_lbl.setStyleSheet(
-            f"font-size: 12px; color: {C.TEXT3}; margin-top: 6px; "
-            f"font-family: 'Cascadia Code', 'Consolas', monospace;"
+            f"font-size: 12px; color: {C.TEXT3}; margin-top: 6px; font-family: 'Cascadia Code', 'Consolas', monospace;"
         )
         info_lay.addWidget(modules_lbl)
         layout.addWidget(info_card)
@@ -159,9 +158,16 @@ class DashboardPage(QWidget):
     def _count_modules() -> str:
         count = 0
         module_names = [
-            "spaces", "tonemap", "difference", "harmony",
-            "blindness", "adaptation", "spectral", "appearance",
-            "icc", "gamut",
+            "spaces",
+            "tonemap",
+            "difference",
+            "harmony",
+            "blindness",
+            "adaptation",
+            "spectral",
+            "appearance",
+            "icc",
+            "gamut",
         ]
         for name in module_names:
             try:
@@ -175,6 +181,7 @@ class DashboardPage(QWidget):
     def _count_tests() -> str:
         try:
             from pathlib import Path
+
             test_dir = Path(__file__).resolve().parents[2] / "tests"
             if test_dir.is_dir():
                 tests = list(test_dir.glob("test_*.py"))

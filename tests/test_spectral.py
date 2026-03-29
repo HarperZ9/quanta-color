@@ -1,4 +1,5 @@
 """Comprehensive tests for spectral rendering."""
+
 import numpy as np
 import pytest
 
@@ -19,6 +20,7 @@ from quanta_color.spectral import (
 # Planck blackbody
 # =========================================================================
 
+
 class TestPlanckRadiation:
     """Tests for blackbody spectral radiance."""
 
@@ -28,8 +30,7 @@ class TestPlanckRadiation:
         spd = planck_radiation(wavelengths, 5800.0)
         peak_nm = wavelengths[np.argmax(spd)]
         # Wien's law: peak ~ 2898000/T nm => ~499nm at 5800K
-        assert 470 <= peak_nm <= 530, \
-            f"Peak at {peak_nm}nm, expected ~500nm for 5800K"
+        assert 470 <= peak_nm <= 530, f"Peak at {peak_nm}nm, expected ~500nm for 5800K"
 
     def test_peak_at_3000k(self):
         """Planck at 3000K (warm light) should peak around 966nm."""
@@ -37,8 +38,7 @@ class TestPlanckRadiation:
         spd = planck_radiation(wavelengths, 3000.0)
         peak_nm = wavelengths[np.argmax(spd)]
         # Wien's law: 2898000/3000 ~ 966nm
-        assert 900 <= peak_nm <= 1050, \
-            f"Peak at {peak_nm}nm, expected ~966nm for 3000K"
+        assert 900 <= peak_nm <= 1050, f"Peak at {peak_nm}nm, expected ~966nm for 3000K"
 
     def test_positive_values(self):
         """Spectral radiance must be positive for all visible wavelengths."""
@@ -57,6 +57,7 @@ class TestPlanckRadiation:
 # SPD integration
 # =========================================================================
 
+
 class TestSPDIntegration:
     """Tests for spectral power distribution to XYZ integration."""
 
@@ -68,10 +69,8 @@ class TestSPDIntegration:
         total = np.sum(xyz)
         x = xyz[0] / total
         y = xyz[1] / total
-        assert x == pytest.approx(1.0 / 3.0, abs=0.02), \
-            f"Equal-energy x={x}, expected ~0.333"
-        assert y == pytest.approx(1.0 / 3.0, abs=0.02), \
-            f"Equal-energy y={y}, expected ~0.333"
+        assert x == pytest.approx(1.0 / 3.0, abs=0.02), f"Equal-energy x={x}, expected ~0.333"
+        assert y == pytest.approx(1.0 / 3.0, abs=0.02), f"Equal-energy y={y}, expected ~0.333"
 
     def test_equal_energy_y_normalized(self):
         """With normalization, Y of equal-energy illuminant should be ~1.0."""
@@ -95,6 +94,7 @@ class TestSPDIntegration:
 # =========================================================================
 # CMF arrays
 # =========================================================================
+
 
 class TestCMFArrays:
     """Color matching function array dimensions."""
@@ -120,13 +120,13 @@ class TestCMFArrays:
         """y-bar peaks near 555nm (photopic peak)."""
         peak_idx = np.argmax(CMF_Y)
         peak_wl = CMF_WAVELENGTHS[peak_idx]
-        assert 550 <= peak_wl <= 570, \
-            f"y-bar peak at {peak_wl}nm, expected ~555nm"
+        assert 550 <= peak_wl <= 570, f"y-bar peak at {peak_wl}nm, expected ~555nm"
 
 
 # =========================================================================
 # Dominant wavelength
 # =========================================================================
+
 
 class TestDominantWavelength:
     """Tests for dominant wavelength calculation."""
@@ -136,22 +136,19 @@ class TestDominantWavelength:
         # Approximate chromaticity of pure sRGB red
         # sRGB red XYZ ~ (0.4125, 0.2127, 0.0193) -> x~0.64, y~0.33
         lam = dominant_wavelength(0.64, 0.33)
-        assert 610 <= lam <= 780, \
-            f"Red dominant wavelength {lam}nm, expected 610-780nm"
+        assert 610 <= lam <= 780, f"Red dominant wavelength {lam}nm, expected 610-780nm"
 
     def test_pure_green_near_520nm(self):
         """Dominant wavelength of green chromaticity near 520nm."""
         # sRGB green XYZ ~ (0.3576, 0.7152, 0.1192) -> x~0.30, y~0.60
         lam = dominant_wavelength(0.30, 0.60)
-        assert 490 <= lam <= 560, \
-            f"Green dominant wavelength {lam}nm, expected 490-560nm"
+        assert 490 <= lam <= 560, f"Green dominant wavelength {lam}nm, expected 490-560nm"
 
     def test_pure_blue_near_470nm(self):
         """Dominant wavelength of blue chromaticity near 470nm."""
         # sRGB blue XYZ ~ (0.0193, 0.0722, 0.9503) -> x~0.15, y~0.06
         lam = dominant_wavelength(0.15, 0.06)
-        assert 400 <= lam <= 490, \
-            f"Blue dominant wavelength {lam}nm, expected 400-490nm"
+        assert 400 <= lam <= 490, f"Blue dominant wavelength {lam}nm, expected 400-490nm"
 
     def test_returns_float(self):
         lam = dominant_wavelength(0.4, 0.4)
@@ -162,6 +159,7 @@ class TestDominantWavelength:
 # Cauchy IOR
 # =========================================================================
 
+
 class TestCauchyIOR:
     """Tests for Cauchy dispersion model."""
 
@@ -169,8 +167,7 @@ class TestCauchyIOR:
         """IOR at visible wavelengths should be between 1.3 and 1.8 for glass."""
         for wl in [400, 500, 600, 700]:
             n = cauchy_ior(wl, n0=1.5, B=0.004)
-            assert 1.3 <= n <= 1.8, \
-                f"IOR at {wl}nm = {n}, expected 1.3-1.8"
+            assert 1.3 <= n <= 1.8, f"IOR at {wl}nm = {n}, expected 1.3-1.8"
 
     def test_shorter_wavelength_higher_ior(self):
         """Shorter wavelengths should have higher IOR (normal dispersion)."""
@@ -191,6 +188,7 @@ class TestCauchyIOR:
 # =========================================================================
 # Blackbody chromaticity
 # =========================================================================
+
 
 class TestBlackbodyChromaticity:
     """Tests for blackbody_chromaticity."""
@@ -216,6 +214,7 @@ class TestBlackbodyChromaticity:
 # =========================================================================
 # Daylight chromaticity
 # =========================================================================
+
 
 class TestDaylightChromaticity:
     """Tests for CIE daylight chromaticity."""

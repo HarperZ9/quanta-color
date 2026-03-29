@@ -52,6 +52,7 @@ APP_ORG = "Quanta Universe"
 # Application Icon — color spectrum arc
 # =============================================================================
 
+
 def make_app_icon() -> QIcon:
     """
     Create the application icon programmatically.
@@ -76,14 +77,14 @@ def make_app_icon() -> QIcon:
         arc_width = max(2.0, s * 0.09)
 
         spectrum = [
-            (0,   "#d4a0a0"),   # soft pink
-            (45,  "#e0c87a"),   # buttercream
-            (90,  "#92ad7e"),   # sage green
-            (135, "#95b3ba"),   # powder blue
-            (180, "#b07878"),   # muted rose
-            (225, "#d08888"),   # soft coral
-            (270, "#deb0b0"),   # light pink
-            (315, "#a3be90"),   # sage bright
+            (0, "#d4a0a0"),  # soft pink
+            (45, "#e0c87a"),  # buttercream
+            (90, "#92ad7e"),  # sage green
+            (135, "#95b3ba"),  # powder blue
+            (180, "#b07878"),  # muted rose
+            (225, "#d08888"),  # soft coral
+            (270, "#deb0b0"),  # light pink
+            (315, "#a3be90"),  # sage bright
         ]
 
         for angle_start, color in spectrum:
@@ -114,6 +115,7 @@ def make_app_icon() -> QIcon:
 # =============================================================================
 # Placeholder Page (fallback for unbuilt pages)
 # =============================================================================
+
 
 class PlaceholderPage(QWidget):
     def __init__(self, title: str, parent=None):
@@ -192,40 +194,24 @@ class QuantaColorWindow(QMainWindow):
 
         # File
         file_menu = mb.addMenu("&File")
-        file_menu.addAction(
-            QAction("&Open Image...", self, shortcut="Ctrl+O",
-                    triggered=self._open_image)
-        )
-        file_menu.addAction(
-            QAction("Open &LUT...", self, shortcut="Ctrl+L",
-                    triggered=self._open_lut)
-        )
+        file_menu.addAction(QAction("&Open Image...", self, shortcut="Ctrl+O", triggered=self._open_image))
+        file_menu.addAction(QAction("Open &LUT...", self, shortcut="Ctrl+L", triggered=self._open_lut))
         file_menu.addSeparator()
-        file_menu.addAction(
-            QAction("E&xit", self, shortcut="Alt+F4",
-                    triggered=self.close)
-        )
+        file_menu.addAction(QAction("E&xit", self, shortcut="Alt+F4", triggered=self.close))
 
         # View — page navigation shortcuts
         view = mb.addMenu("&View")
         for i, (name, sc) in enumerate(zip(PAGE_MENU_NAMES, PAGE_SHORTCUTS)):
             act = QAction(name, self)
             act.setShortcut(QKeySequence(sc))
-            act.triggered.connect(
-                lambda checked, idx=i: self._shortcut_switch_page(idx)
-            )
+            act.triggered.connect(lambda checked, idx=i: self._shortcut_switch_page(idx))
             view.addAction(act)
         view.addSeparator()
-        view.addAction(
-            QAction("&Refresh", self, shortcut="F5",
-                    triggered=self._refresh_current)
-        )
+        view.addAction(QAction("&Refresh", self, shortcut="F5", triggered=self._refresh_current))
 
         # Help
         help_menu = mb.addMenu("&Help")
-        help_menu.addAction(
-            QAction("&About", self, triggered=self._about)
-        )
+        help_menu.addAction(QAction("&About", self, triggered=self._about))
 
     # --- Central Widget ---
 
@@ -247,6 +233,7 @@ class QuantaColorWindow(QMainWindow):
         # Page 0: Dashboard
         try:
             from quanta_color.gui.pages.dashboard import DashboardPage
+
             self.stack.addWidget(DashboardPage())
         except (ImportError, AttributeError, TypeError) as e:
             logger.warning("Failed to load DashboardPage: %s", e)
@@ -255,6 +242,7 @@ class QuantaColorWindow(QMainWindow):
         # Page 1: Image Analyzer
         try:
             from quanta_color.gui.pages.image_analyzer import ImageAnalyzerPage
+
             self.stack.addWidget(ImageAnalyzerPage())
         except (ImportError, AttributeError, TypeError) as e:
             logger.warning("Failed to load ImageAnalyzerPage: %s", e)
@@ -263,6 +251,7 @@ class QuantaColorWindow(QMainWindow):
         # Page 2: Color Inspector
         try:
             from quanta_color.gui.pages.color_inspector import ColorInspectorPage
+
             self.stack.addWidget(ColorInspectorPage())
         except (ImportError, AttributeError, TypeError) as e:
             logger.warning("Failed to load ColorInspectorPage: %s", e)
@@ -271,6 +260,7 @@ class QuantaColorWindow(QMainWindow):
         # Page 3: LUT Workshop
         try:
             from quanta_color.gui.pages.lut_workshop import LUTWorkshopPage
+
             self.stack.addWidget(LUTWorkshopPage())
         except (ImportError, AttributeError, TypeError) as e:
             logger.warning("Failed to load LUTWorkshopPage: %s", e)
@@ -279,6 +269,7 @@ class QuantaColorWindow(QMainWindow):
         # Page 4: Palette Studio
         try:
             from quanta_color.gui.pages.palette_studio import PaletteStudioPage
+
             self.stack.addWidget(PaletteStudioPage())
         except (ImportError, AttributeError, TypeError) as e:
             logger.warning("Failed to load PaletteStudioPage: %s", e)
@@ -287,6 +278,7 @@ class QuantaColorWindow(QMainWindow):
         # Page 5: Settings
         try:
             from quanta_color.gui.pages.settings import SettingsPage
+
             self.stack.addWidget(SettingsPage())
         except (ImportError, AttributeError, TypeError) as e:
             logger.warning("Failed to load SettingsPage: %s", e)
@@ -344,35 +336,32 @@ class QuantaColorWindow(QMainWindow):
 
     def _open_image(self):
         path, _ = QFileDialog.getOpenFileName(
-            self, "Open Image", "",
-            "Images (*.png *.jpg *.jpeg *.tif *.tiff *.exr *.hdr *.bmp)"
+            self, "Open Image", "", "Images (*.png *.jpg *.jpeg *.tif *.tiff *.exr *.hdr *.bmp)"
         )
         if path:
             self._status.setText(f"Loaded: {Path(path).name}")
 
     def _open_lut(self):
-        path, _ = QFileDialog.getOpenFileName(
-            self, "Open LUT", "",
-            "LUT Files (*.cube *.3dl *.csp *.spi3d)"
-        )
+        path, _ = QFileDialog.getOpenFileName(self, "Open LUT", "", "LUT Files (*.cube *.3dl *.csp *.spi3d)")
         if path:
             self._status.setText(f"Loaded: {Path(path).name}")
 
     def _refresh_current(self):
         page = self.stack.currentWidget()
-        if hasattr(page, 'refresh'):
+        if hasattr(page, "refresh"):
             page.refresh()
         self._status.setText("Refreshed")
 
     def _about(self):
         QMessageBox.about(
-            self, f"About {APP_NAME}",
+            self,
+            f"About {APP_NAME}",
             f"<h2>{APP_NAME}</h2>"
             f"<p>Version {APP_VERSION}</p>"
             f"<p>Professional color science workbench for<br>"
             f"image analysis, LUT creation, and color grading.</p>"
             f"<p>Color science: Oklab, JzAzBz, CAM16, PQ/HLG, ACES</p>"
-            f"<p>&copy; 2022-2026 Zain Dana Harper</p>"
+            f"<p>&copy; 2022-2026 Zain Dana Harper</p>",
         )
 
     # --- Geometry Persistence ---
@@ -393,4 +382,5 @@ class QuantaColorWindow(QMainWindow):
 
 if __name__ == "__main__":
     from quanta_color.gui import launch
+
     sys.exit(launch())

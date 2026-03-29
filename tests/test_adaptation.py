@@ -1,4 +1,5 @@
 """Comprehensive tests for chromatic adaptation transforms."""
+
 import numpy as np
 import pytest
 
@@ -24,6 +25,7 @@ ALL_METHODS = list(MATRICES.keys())
 # Roundtrip D65 -> D50 -> D65 for all 9 methods
 # =========================================================================
 
+
 class TestRoundtrip:
     """Adapting D65->D50 then D50->D65 should recover the original."""
 
@@ -35,8 +37,7 @@ class TestRoundtrip:
 
         adapted = adapt(test_xyz, d65, d50, method=method)
         recovered = adapt(adapted, d50, d65, method=method)
-        np.testing.assert_allclose(recovered, test_xyz, atol=1e-8,
-                                   err_msg=f"Roundtrip failed for {method}")
+        np.testing.assert_allclose(recovered, test_xyz, atol=1e-8, err_msg=f"Roundtrip failed for {method}")
 
     @pytest.mark.parametrize("method", ALL_METHODS)
     def test_roundtrip_white(self, method):
@@ -45,17 +46,16 @@ class TestRoundtrip:
         d50 = ILLUMINANTS["D50"]
 
         adapted = adapt(d65, d65, d50, method=method)
-        np.testing.assert_allclose(adapted, d50, atol=0.01,
-                                   err_msg=f"D65->D50 failed for {method}")
+        np.testing.assert_allclose(adapted, d50, atol=0.01, err_msg=f"D65->D50 failed for {method}")
 
         recovered = adapt(adapted, d50, d65, method=method)
-        np.testing.assert_allclose(recovered, d65, atol=0.01,
-                                   err_msg=f"D50->D65 recovery failed for {method}")
+        np.testing.assert_allclose(recovered, d65, atol=0.01, err_msg=f"D50->D65 recovery failed for {method}")
 
 
 # =========================================================================
 # Bradford D65->D50 matches ICC values
 # =========================================================================
+
 
 class TestBradfordICC:
     """Bradford adaptation matrix D65->D50 should match ICC published values."""
@@ -68,13 +68,14 @@ class TestBradfordICC:
 
         # ICC profile specification Bradford D65->D50 matrix
         # (approximate reference values)
-        icc_ref = np.array([
-            [ 1.0479,  0.0229, -0.0502],
-            [ 0.0296,  0.9904, -0.0171],
-            [-0.0092,  0.0150,  0.7521],
-        ])
-        np.testing.assert_allclose(M, icc_ref, atol=0.005,
-                                   err_msg="Bradford D65->D50 doesn't match ICC")
+        icc_ref = np.array(
+            [
+                [1.0479, 0.0229, -0.0502],
+                [0.0296, 0.9904, -0.0171],
+                [-0.0092, 0.0150, 0.7521],
+            ]
+        )
+        np.testing.assert_allclose(M, icc_ref, atol=0.005, err_msg="Bradford D65->D50 doesn't match ICC")
 
     def test_bradford_identity(self):
         """Adapting from D65 to D65 should produce identity matrix."""
@@ -86,6 +87,7 @@ class TestBradfordICC:
 # =========================================================================
 # Partial adaptation
 # =========================================================================
+
 
 class TestPartialAdaptation:
     """Tests for adapt_partial with varying degree."""
@@ -132,13 +134,21 @@ class TestPartialAdaptation:
 # CCT roundtrip
 # =========================================================================
 
+
 class TestCCTRoundtrip:
     """Color temperature conversion roundtrip tests."""
 
-    @pytest.mark.parametrize("target_cct,tol", [
-        (4000, 50), (5000, 50), (5500, 50), (6500, 50),
-        (7500, 150), (10000, 500),
-    ])
+    @pytest.mark.parametrize(
+        "target_cct,tol",
+        [
+            (4000, 50),
+            (5000, 50),
+            (5500, 50),
+            (6500, 50),
+            (7500, 150),
+            (10000, 500),
+        ],
+    )
     def test_cct_roundtrip(self, target_cct, tol):
         """cct_to_xy -> xy_to_cct_mccamy should approximate original.
 
@@ -147,8 +157,9 @@ class TestCCTRoundtrip:
         """
         x, y = cct_to_xy(target_cct)
         recovered = xy_to_cct_mccamy(x, y)
-        assert abs(recovered - target_cct) < tol, \
+        assert abs(recovered - target_cct) < tol, (
             f"CCT roundtrip: {target_cct}K -> ({x:.4f},{y:.4f}) -> {recovered:.1f}K"
+        )
 
     def test_cct_to_xyz_has_unit_y(self):
         """cct_to_xyz should return Y=1 normalized values."""
@@ -167,6 +178,7 @@ class TestCCTRoundtrip:
 # Illuminants
 # =========================================================================
 
+
 class TestIlluminants:
     """Tests for standard illuminants."""
 
@@ -174,8 +186,7 @@ class TestIlluminants:
     def test_y_equals_one(self, name):
         """All illuminants should have Y=1.0."""
         xyz = ILLUMINANTS[name]
-        assert xyz[1] == pytest.approx(1.0, abs=1e-10), \
-            f"Illuminant {name} Y={xyz[1]} != 1.0"
+        assert xyz[1] == pytest.approx(1.0, abs=1e-10), f"Illuminant {name} Y={xyz[1]} != 1.0"
 
     def test_seven_illuminants(self):
         """Should have at least 7 standard illuminants."""
@@ -195,6 +206,7 @@ class TestIlluminants:
 # =========================================================================
 # White balance estimators
 # =========================================================================
+
 
 class TestWhiteBalance:
     """Tests for white balance estimation functions."""
@@ -241,6 +253,7 @@ class TestWhiteBalance:
 # =========================================================================
 # Adaptation matrix properties
 # =========================================================================
+
 
 class TestAdaptationMatrixProperties:
     """General properties of adaptation matrices."""

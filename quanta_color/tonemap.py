@@ -23,7 +23,6 @@ Input: linear HDR values (0 to unbounded)
 Output: SDR values (0 to 1)
 """
 
-
 import numpy as np
 
 
@@ -62,29 +61,29 @@ def hable(x: np.ndarray, source_peak: float = 4.0) -> np.ndarray:
     A, B, C, D, E, F = 0.15, 0.50, 0.10, 0.20, 0.02, 0.30
 
     def _curve(v):
-        return ((v * (A * v + C * B) + D * E) /
-                (v * (A * v + B) + D * F)) - E / F
+        return ((v * (A * v + C * B) + D * E) / (v * (A * v + B) + D * F)) - E / F
 
     white = _curve(np.array([source_peak]))[0]
     return np.clip(_curve(x) / white, 0.0, 1.0)
 
 
-def lottes(x: np.ndarray, a: float = 1.6, d: float = 0.977,
-           hdr_max: float = 8.0, mid_in: float = 0.18,
-           mid_out: float = 0.267) -> np.ndarray:
+def lottes(
+    x: np.ndarray, a: float = 1.6, d: float = 0.977, hdr_max: float = 8.0, mid_in: float = 0.18, mid_out: float = 0.267
+) -> np.ndarray:
     """Timothy Lottes tone mapping (contrast-preserving)."""
     x = np.asarray(x, dtype=np.float64)
-    b = (-np.power(mid_in, a) + np.power(hdr_max, a) * mid_out) / \
-        ((np.power(hdr_max, a * d) - np.power(mid_in, a * d)) * mid_out)
-    c = (np.power(hdr_max, a * d) * np.power(mid_in, a) -
-         np.power(hdr_max, a) * np.power(mid_in, a * d) * mid_out) / \
-        ((np.power(hdr_max, a * d) - np.power(mid_in, a * d)) * mid_out)
+    b = (-np.power(mid_in, a) + np.power(hdr_max, a) * mid_out) / (
+        (np.power(hdr_max, a * d) - np.power(mid_in, a * d)) * mid_out
+    )
+    c = (np.power(hdr_max, a * d) * np.power(mid_in, a) - np.power(hdr_max, a) * np.power(mid_in, a * d) * mid_out) / (
+        (np.power(hdr_max, a * d) - np.power(mid_in, a * d)) * mid_out
+    )
     return np.clip(np.power(x, a) / (np.power(x, a * d) * b + c), 0.0, 1.0)
 
 
-def uchimura(x: np.ndarray, P: float = 1.0, a: float = 1.0,
-             m: float = 0.22, l: float = 0.4, c: float = 1.33,
-             b: float = 0.0) -> np.ndarray:
+def uchimura(
+    x: np.ndarray, P: float = 1.0, a: float = 1.0, m: float = 0.22, l: float = 0.4, c: float = 1.33, b: float = 0.0
+) -> np.ndarray:
     """Gran Turismo / Uchimura tone mapping."""
     x = np.asarray(x, dtype=np.float64)
     l0 = ((P - m) * l) / a
@@ -111,8 +110,7 @@ def agx(x: np.ndarray, look: str = "neutral") -> np.ndarray:
     # Hermite polynomial approximation of AgX curve
     x2 = x * x
     x4 = x2 * x2
-    mapped = (15.5 * x4 * x2 - 40.14 * x4 * x + 31.96 * x4 -
-              6.868 * x2 * x + 0.4298 * x2 + 0.1191 * x - 0.00232)
+    mapped = 15.5 * x4 * x2 - 40.14 * x4 * x + 31.96 * x4 - 6.868 * x2 * x + 0.4298 * x2 + 0.1191 * x - 0.00232
     mapped = np.clip(mapped, 0.0, 1.0)
 
     if look == "punchy":
@@ -143,7 +141,7 @@ def pbr_neutral(x: np.ndarray) -> np.ndarray:
     x_desat = np.where(
         lum[..., np.newaxis] > start_compression if x.ndim >= 2 else lum > start_compression,
         x * (1.0 - desaturation) + lum[..., np.newaxis] * desaturation if x.ndim >= 2 else x,
-        x
+        x,
     )
     # Simple filmic compression
     return np.clip(x_desat / (1.0 + x_desat), 0.0, 1.0)
@@ -190,7 +188,7 @@ _HLG_C = 0.55991073
 def hlg_oetf(E: np.ndarray) -> np.ndarray:
     """HLG OETF: linear [0,1] -> HLG signal [0,1]."""
     E = np.clip(np.asarray(E, dtype=np.float64), 0, 1)
-    with np.errstate(divide='ignore', invalid='ignore'):
+    with np.errstate(divide="ignore", invalid="ignore"):
         return np.where(
             E <= 1.0 / 12.0,
             np.sqrt(3.0 * E),
@@ -208,8 +206,9 @@ def hlg_eotf(E: np.ndarray) -> np.ndarray:
     )
 
 
-def bt2390_eetf(L: np.ndarray, source_peak: float = 4000.0,
-                target_peak: float = 1000.0, min_lum: float = 0.0) -> np.ndarray:
+def bt2390_eetf(
+    L: np.ndarray, source_peak: float = 4000.0, target_peak: float = 1000.0, min_lum: float = 0.0
+) -> np.ndarray:
     """
     ITU-R BT.2390 EETF (Electrical-Electrical Transfer Function).
 
@@ -248,8 +247,7 @@ def bt2390_eetf(L: np.ndarray, source_peak: float = 4000.0,
     return pq_eotf(e2_pq)
 
 
-def bt2446_method_a(y_hdr: np.ndarray, L_hdr: float = 1000.0,
-                     L_sdr: float = 100.0) -> np.ndarray:
+def bt2446_method_a(y_hdr: np.ndarray, L_hdr: float = 1000.0, L_sdr: float = 100.0) -> np.ndarray:
     """ITU-R BT.2446 Method A: scene-referred HDR-to-SDR conversion."""
     y_hdr = np.asarray(y_hdr, dtype=np.float64)
     y_norm = y_hdr / L_hdr
@@ -258,15 +256,13 @@ def bt2446_method_a(y_hdr: np.ndarray, L_hdr: float = 1000.0,
     return np.clip(y_sdr / L_sdr, 0.0, 1.0)
 
 
-def knee(L: np.ndarray, knee_start: float = 0.5,
-         max_output: float = 1.0, power: float = 0.5) -> np.ndarray:
+def knee(L: np.ndarray, knee_start: float = 0.5, max_output: float = 1.0, power: float = 0.5) -> np.ndarray:
     """Custom knee function with configurable parameters."""
     L = np.asarray(L, dtype=np.float64)
     excess = L - knee_start
-    compressed = knee_start + np.power(
-        np.clip(excess / (max_output - knee_start + 1e-10), 0, None),
-        power
-    ) * (max_output - knee_start)
+    compressed = knee_start + np.power(np.clip(excess / (max_output - knee_start + 1e-10), 0, None), power) * (
+        max_output - knee_start
+    )
     return np.where(knee_start >= L, L, compressed)
 
 

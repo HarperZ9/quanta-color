@@ -1,4 +1,5 @@
 """Comprehensive tests for color vision deficiency simulation."""
+
 import numpy as np
 import pytest
 
@@ -12,6 +13,7 @@ from quanta_color.blindness import (
 # Severity 0 returns input unchanged
 # =========================================================================
 
+
 class TestSeverityZero:
     """Severity 0 should return input unchanged."""
 
@@ -19,13 +21,13 @@ class TestSeverityZero:
     def test_severity_zero_identity(self, deficiency):
         srgb = np.array([0.8, 0.3, 0.5])
         result = simulate(srgb, deficiency=deficiency, severity=0.0)
-        np.testing.assert_allclose(result, srgb, atol=1e-10,
-                                   err_msg=f"{deficiency} at severity=0 changed input")
+        np.testing.assert_allclose(result, srgb, atol=1e-10, err_msg=f"{deficiency} at severity=0 changed input")
 
 
 # =========================================================================
 # Achromatopsia at severity 1 returns grayscale
 # =========================================================================
+
 
 class TestAchromatopsia:
     """Full achromatopsia should produce grayscale (R=G=B)."""
@@ -58,6 +60,7 @@ class TestAchromatopsia:
 # All 4 deficiency types produce valid output (0-1 range)
 # =========================================================================
 
+
 class TestValidOutput:
     """All deficiency types should produce values in [0, 1]."""
 
@@ -65,10 +68,8 @@ class TestValidOutput:
     def test_output_range_single(self, deficiency):
         srgb = np.array([0.8, 0.3, 0.5])
         result = simulate(srgb, deficiency=deficiency, severity=1.0)
-        assert np.all(result >= 0.0), \
-            f"{deficiency} produced negative values: {result}"
-        assert np.all(result <= 1.0), \
-            f"{deficiency} produced values > 1: {result}"
+        assert np.all(result >= 0.0), f"{deficiency} produced negative values: {result}"
+        assert np.all(result <= 1.0), f"{deficiency} produced values > 1: {result}"
 
     @pytest.mark.parametrize("deficiency", DEFICIENCY_TYPES)
     def test_output_range_primary_colors(self, deficiency):
@@ -83,8 +84,7 @@ class TestValidOutput:
         ]
         for color in primaries:
             result = simulate(color, deficiency=deficiency, severity=1.0)
-            assert np.all(result >= 0.0) and np.all(result <= 1.0), \
-                f"{deficiency} out of range for {color}: {result}"
+            assert np.all(result >= 0.0) and np.all(result <= 1.0), f"{deficiency} out of range for {color}: {result}"
 
     @pytest.mark.parametrize("deficiency", DEFICIENCY_TYPES)
     @pytest.mark.parametrize("severity", [0.0, 0.25, 0.5, 0.75, 1.0])
@@ -98,6 +98,7 @@ class TestValidOutput:
 # Batch processing
 # =========================================================================
 
+
 class TestBatchProcessing:
     """Test (N,3) array batch processing."""
 
@@ -106,8 +107,7 @@ class TestBatchProcessing:
         rng = np.random.RandomState(42)
         srgb = rng.rand(10, 3)
         result = simulate(srgb, deficiency=deficiency, severity=1.0)
-        assert result.shape == (10, 3), \
-            f"{deficiency} batch shape: {result.shape}, expected (10, 3)"
+        assert result.shape == (10, 3), f"{deficiency} batch shape: {result.shape}, expected (10, 3)"
         assert np.all(result >= 0.0)
         assert np.all(result <= 1.0 + 1e-10)
 
@@ -121,11 +121,13 @@ class TestBatchProcessing:
 
     def test_batch_consistency(self):
         """Batch result should match individual results."""
-        colors = np.array([
-            [0.8, 0.3, 0.5],
-            [0.2, 0.7, 0.1],
-            [0.5, 0.5, 0.5],
-        ])
+        colors = np.array(
+            [
+                [0.8, 0.3, 0.5],
+                [0.2, 0.7, 0.1],
+                [0.5, 0.5, 0.5],
+            ]
+        )
         batch_result = simulate(colors, deficiency="protanopia", severity=1.0)
         for i in range(3):
             single = simulate(colors[i], deficiency="protanopia", severity=1.0)
@@ -135,6 +137,7 @@ class TestBatchProcessing:
 # =========================================================================
 # Error map
 # =========================================================================
+
 
 class TestErrorMap:
     """Tests for error_map function."""
@@ -169,6 +172,7 @@ class TestErrorMap:
 # Edge cases
 # =========================================================================
 
+
 class TestEdgeCases:
     """Edge case handling."""
 
@@ -190,5 +194,6 @@ class TestEdgeCases:
         for d in ["protanopia", "deuteranopia", "tritanopia"]:
             results[d] = simulate(srgb, deficiency=d, severity=1.0)
         # At least two should differ
-        assert not np.allclose(results["protanopia"], results["deuteranopia"], atol=1e-3) or \
-               not np.allclose(results["protanopia"], results["tritanopia"], atol=1e-3)
+        assert not np.allclose(results["protanopia"], results["deuteranopia"], atol=1e-3) or not np.allclose(
+            results["protanopia"], results["tritanopia"], atol=1e-3
+        )

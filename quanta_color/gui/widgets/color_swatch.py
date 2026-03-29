@@ -43,6 +43,7 @@ class ColorSwatch(QWidget):
 
     def _oklab_str(self) -> str:
         """Approximate Oklab from linear sRGB."""
+
         # Linearize
         def lin(v):
             return v / 12.92 if v <= 0.04045 else ((v + 0.055) / 1.055) ** 2.4

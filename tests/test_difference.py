@@ -1,4 +1,5 @@
 """Comprehensive tests for color difference metrics."""
+
 import numpy as np
 import pytest
 
@@ -19,6 +20,7 @@ from quanta_color.difference import (
 # Reference: "The CIEDE2000 Color-Difference Formula", Sharma et al.
 # =========================================================================
 
+
 class TestCIEDE2000KnownPairs:
     """CIEDE2000 validated against published reference values."""
 
@@ -26,42 +28,29 @@ class TestCIEDE2000KnownPairs:
     # Reference: Sharma, Wu, Dalal 2005, "The CIEDE2000 Color-Difference Formula"
     SHARMA_PAIRS = [
         # Pair 1
-        (np.array([50.0000, 2.6772, -79.7751]),
-         np.array([50.0000, 0.0000, -82.7485]),
-         2.0425),
+        (np.array([50.0000, 2.6772, -79.7751]), np.array([50.0000, 0.0000, -82.7485]), 2.0425),
         # Pair 2
-        (np.array([50.0000, 3.1571, -77.2803]),
-         np.array([50.0000, 0.0000, -82.7485]),
-         2.8615),
+        (np.array([50.0000, 3.1571, -77.2803]), np.array([50.0000, 0.0000, -82.7485]), 2.8615),
         # Pair 3
-        (np.array([50.0000, 2.8361, -74.0200]),
-         np.array([50.0000, 0.0000, -82.7485]),
-         3.4412),
+        (np.array([50.0000, 2.8361, -74.0200]), np.array([50.0000, 0.0000, -82.7485]), 3.4412),
         # Pair 9 (near-achromatic, small b)
-        (np.array([50.0000, -0.0010, 2.4900]),
-         np.array([50.0000, 0.0009, -2.4900]),
-         4.8045),
+        (np.array([50.0000, -0.0010, 2.4900]), np.array([50.0000, 0.0009, -2.4900]), 4.8045),
         # Pair 17 (lightness difference)
-        (np.array([50.0000, 2.5000, 0.0000]),
-         np.array([73.0000, 25.0000, -18.0000]),
-         27.1492),
+        (np.array([50.0000, 2.5000, 0.0000]), np.array([73.0000, 25.0000, -18.0000]), 27.1492),
         # Pair 25 (chromatic, similar hue)
-        (np.array([60.2574, -34.0099, 36.2677]),
-         np.array([60.4626, -34.1751, 39.4387]),
-         1.2644),
+        (np.array([60.2574, -34.0099, 36.2677]), np.array([60.4626, -34.1751, 39.4387]), 1.2644),
     ]
 
-    @pytest.mark.parametrize("lab1,lab2,expected", SHARMA_PAIRS,
-                             ids=[f"pair_{i}" for i in range(len(SHARMA_PAIRS))])
+    @pytest.mark.parametrize("lab1,lab2,expected", SHARMA_PAIRS, ids=[f"pair_{i}" for i in range(len(SHARMA_PAIRS))])
     def test_sharma_pair(self, lab1, lab2, expected):
         result = delta_e_2000(lab1, lab2)
-        assert result == pytest.approx(expected, abs=0.005), \
-            f"CIEDE2000 got {result}, expected {expected}"
+        assert result == pytest.approx(expected, abs=0.005), f"CIEDE2000 got {result}, expected {expected}"
 
 
 # =========================================================================
 # CIE76
 # =========================================================================
+
 
 class TestCIE76:
     """CIE 1976 color difference tests."""
@@ -92,6 +81,7 @@ class TestCIE76:
 # CIE94
 # =========================================================================
 
+
 class TestCIE94:
     """CIE 1994 color difference tests."""
 
@@ -101,8 +91,7 @@ class TestCIE94:
         lab2 = np.array([60.0, 20.0, -5.0])
         de_graphics = delta_e_94(lab1, lab2, application="graphic_arts")
         de_textiles = delta_e_94(lab1, lab2, application="textiles")
-        assert de_graphics != pytest.approx(de_textiles, abs=0.001), \
-            "CIE94 graphics and textiles should differ"
+        assert de_graphics != pytest.approx(de_textiles, abs=0.001), "CIE94 graphics and textiles should differ"
 
     def test_identical_zero(self):
         lab = np.array([50.0, 25.0, -10.0])
@@ -118,6 +107,7 @@ class TestCIE94:
 # CMC
 # =========================================================================
 
+
 class TestCMC:
     """CMC(l:c) color difference tests."""
 
@@ -127,8 +117,7 @@ class TestCMC:
         lab2 = np.array([60.0, 20.0, -5.0])
         de_21 = delta_e_cmc(lab1, lab2, l=2.0, c=1.0)
         de_11 = delta_e_cmc(lab1, lab2, l=1.0, c=1.0)
-        assert de_21 != pytest.approx(de_11, abs=0.001), \
-            "CMC(2:1) and CMC(1:1) should differ"
+        assert de_21 != pytest.approx(de_11, abs=0.001), "CMC(2:1) and CMC(1:1) should differ"
 
     def test_identical_zero(self):
         lab = np.array([50.0, 25.0, -10.0])
@@ -154,6 +143,7 @@ class TestCMC:
 # HyAB
 # =========================================================================
 
+
 class TestHyAB:
     """HyAB hybrid color difference tests."""
 
@@ -167,8 +157,7 @@ class TestHyAB:
             cie76 = delta_e_76(lab1, lab2)
             # HyAB uses |dL| + sqrt(da^2+db^2) which >= sqrt(dL^2+da^2+db^2)
             # by triangle inequality, this should hold
-            assert hyab >= cie76 - 1e-10, \
-                f"HyAB ({hyab}) < CIE76 ({cie76}) for {lab1} vs {lab2}"
+            assert hyab >= cie76 - 1e-10, f"HyAB ({hyab}) < CIE76 ({cie76}) for {lab1} vs {lab2}"
 
     def test_identical_zero(self):
         lab = np.array([50.0, 25.0, -10.0])
@@ -183,6 +172,7 @@ class TestHyAB:
 # =========================================================================
 # compare_all
 # =========================================================================
+
 
 class TestCompareAll:
     """Test the compare_all convenience function."""
@@ -206,13 +196,13 @@ class TestCompareAll:
         lab = np.array([50.0, 25.0, -10.0])
         result = compare_all(lab, lab)
         for key, val in result.items():
-            assert val == pytest.approx(0.0, abs=1e-10), \
-                f"{key} should be 0 for identical colors"
+            assert val == pytest.approx(0.0, abs=1e-10), f"{key} should be 0 for identical colors"
 
 
 # =========================================================================
 # Batch processing
 # =========================================================================
+
 
 class TestBatchDifference:
     """Test (N,3) array batch processing."""
@@ -260,6 +250,7 @@ class TestBatchDifference:
 # Contrast ratio
 # =========================================================================
 
+
 class TestContrastRatio:
     """WCAG contrast ratio tests."""
 
@@ -274,5 +265,4 @@ class TestContrastRatio:
         assert ratio == pytest.approx(1.0, abs=0.01)
 
     def test_order_independent(self):
-        assert contrast_ratio(0.2, 0.8) == pytest.approx(
-            contrast_ratio(0.8, 0.2), abs=1e-10)
+        assert contrast_ratio(0.2, 0.8) == pytest.approx(contrast_ratio(0.8, 0.2), abs=1e-10)

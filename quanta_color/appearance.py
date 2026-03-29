@@ -27,6 +27,7 @@ import numpy as np
 # Viewing Conditions
 # =============================================================================
 
+
 @dataclass
 class ViewingConditions:
     """
@@ -41,6 +42,7 @@ class ViewingConditions:
         surround: Viewing surround condition — one of
                   "average", "dim", or "dark".
     """
+
     white_point: np.ndarray
     L_A: float = 64.0
     Y_b: float = 20.0
@@ -53,8 +55,8 @@ class ViewingConditions:
 
 SURROUND = {
     "average": {"c": 0.69, "Nc": 1.0, "F": 1.0},
-    "dim":     {"c": 0.59, "Nc": 0.9, "F": 0.9},
-    "dark":    {"c": 0.525, "Nc": 0.8, "F": 0.8},
+    "dim": {"c": 0.59, "Nc": 0.9, "F": 0.9},
+    "dark": {"c": 0.525, "Nc": 0.8, "F": 0.8},
 }
 
 
@@ -62,29 +64,38 @@ SURROUND = {
 # CAT02 and CAM16 Chromatic Adaptation Matrices
 # =============================================================================
 
-M_CAT02 = np.array([
-    [ 0.7328,  0.4296, -0.1624],
-    [-0.7036,  1.6975,  0.0061],
-    [ 0.0030,  0.0136,  0.9834],
-], dtype=np.float64)
+M_CAT02 = np.array(
+    [
+        [0.7328, 0.4296, -0.1624],
+        [-0.7036, 1.6975, 0.0061],
+        [0.0030, 0.0136, 0.9834],
+    ],
+    dtype=np.float64,
+)
 
 M_CAT02_INV = np.linalg.inv(M_CAT02)
 
 # Hunt-Pointer-Estevez matrix for post-adaptation cone space
-M_HPE = np.array([
-    [ 0.38971, 0.68898, -0.07868],
-    [-0.22981, 1.18340,  0.04641],
-    [ 0.00000, 0.00000,  1.00000],
-], dtype=np.float64)
+M_HPE = np.array(
+    [
+        [0.38971, 0.68898, -0.07868],
+        [-0.22981, 1.18340, 0.04641],
+        [0.00000, 0.00000, 1.00000],
+    ],
+    dtype=np.float64,
+)
 
 M_HPE_INV = np.linalg.inv(M_HPE)
 
 # CAM16 chromatic adaptation matrix
-M_CAM16 = np.array([
-    [ 0.401288,  0.650173, -0.051461],
-    [-0.250268,  1.204414,  0.045854],
-    [-0.002079,  0.048952,  0.953127],
-], dtype=np.float64)
+M_CAM16 = np.array(
+    [
+        [0.401288, 0.650173, -0.051461],
+        [-0.250268, 1.204414, 0.045854],
+        [-0.002079, 0.048952, 0.953127],
+    ],
+    dtype=np.float64,
+)
 
 M_CAM16_INV = np.linalg.inv(M_CAM16)
 
@@ -193,6 +204,7 @@ def _inv_hue_quadrature(H: float) -> float:
 # Nonlinear Response Function
 # =============================================================================
 
+
 def _nonlinear_adaptation(x: np.ndarray, F_L: float) -> np.ndarray:
     """
     CIECAM02 / CAM16 nonlinear post-adaptation cone response.
@@ -231,6 +243,7 @@ def _nonlinear_adaptation_inv(y: np.ndarray, F_L: float) -> np.ndarray:
 # CIECAM02 Forward Model
 # =============================================================================
 
+
 def _compute_adaptation_params(vc: ViewingConditions) -> dict:
     """
     Precompute all adaptation parameters from viewing conditions.
@@ -239,10 +252,7 @@ def _compute_adaptation_params(vc: ViewingConditions) -> dict:
     """
     surround = SURROUND.get(vc.surround.lower())
     if surround is None:
-        raise ValueError(
-            f"Unknown surround: {vc.surround}. "
-            f"Options: {list(SURROUND.keys())}"
-        )
+        raise ValueError(f"Unknown surround: {vc.surround}. Options: {list(SURROUND.keys())}")
 
     c = surround["c"]
     Nc = surround["Nc"]
@@ -250,8 +260,7 @@ def _compute_adaptation_params(vc: ViewingConditions) -> dict:
 
     # Degree of adaptation
     k = 1.0 / (5.0 * vc.L_A + 1.0)
-    F_L = (0.2 * k**4 * 5.0 * vc.L_A +
-           0.1 * (1.0 - k**4)**2 * (5.0 * vc.L_A)**(1.0 / 3.0))
+    F_L = 0.2 * k**4 * 5.0 * vc.L_A + 0.1 * (1.0 - k**4) ** 2 * (5.0 * vc.L_A) ** (1.0 / 3.0)
 
     n = vc.Y_b / vc.white_point[1]
     Nbb = 0.725 * (1.0 / n) ** 0.2
@@ -281,10 +290,20 @@ def _compute_adaptation_params(vc: ViewingConditions) -> dict:
     A_w = (2.0 * RGB_aw[0] + RGB_aw[1] + 0.05 * RGB_aw[2] - 0.305) * Nbb
 
     return {
-        "c": c, "Nc": Nc, "F": F, "F_L": F_L,
-        "n": n, "Nbb": Nbb, "Ncb": Ncb, "z": z,
-        "D": D, "D_R": D_R, "D_G": D_G, "D_B": D_B,
-        "RGB_w": RGB_w, "A_w": A_w,
+        "c": c,
+        "Nc": Nc,
+        "F": F,
+        "F_L": F_L,
+        "n": n,
+        "Nbb": Nbb,
+        "Ncb": Ncb,
+        "z": z,
+        "D": D,
+        "D_R": D_R,
+        "D_G": D_G,
+        "D_B": D_B,
+        "RGB_w": RGB_w,
+        "A_w": A_w,
     }
 
 
@@ -302,6 +321,7 @@ class CIECAM02Color:
         s: Saturation (colorfulness relative to brightness).
         H: Hue quadrature (0-400 composition of unique hues).
     """
+
     J: float
     C: float
     h: float
@@ -398,7 +418,7 @@ def ciecam02_forward(
     J = 100.0 * (A / A_w) ** (c * z)
 
     # Step 10: Brightness Q
-    Q = (4.0 / c) * (J / 100.0) ** 0.5 * (A_w + 4.0) * F_L ** 0.25
+    Q = (4.0 / c) * (J / 100.0) ** 0.5 * (A_w + 4.0) * F_L**0.25
 
     # Step 11: Chroma preliminary — t
     t_num = (50000.0 / 13.0) * Nc * Ncb * e_t * np.sqrt(a**2 + b**2)
@@ -406,14 +426,14 @@ def ciecam02_forward(
     t = t_num / max(t_den, 1e-12)
 
     # Step 12: Chroma C
-    C = t**0.9 * (J / 100.0)**0.5 * (1.64 - 0.29**n)**0.73
+    C = t**0.9 * (J / 100.0) ** 0.5 * (1.64 - 0.29**n) ** 0.73
 
     # Step 13: Colorfulness M
     M = C * F_L**0.25
 
     # Step 14: Saturation s
     if Q > 1e-12:
-        s = 100.0 * (M / Q)**0.5
+        s = 100.0 * (M / Q) ** 0.5
     else:
         s = 0.0
 
@@ -423,6 +443,7 @@ def ciecam02_forward(
 # =============================================================================
 # CIECAM02 Inverse Model
 # =============================================================================
+
 
 def ciecam02_inverse(
     J: float,
@@ -476,9 +497,9 @@ def ciecam02_inverse(
     A = A_w * (J / 100.0) ** (1.0 / (c_param * z))
 
     # Step 2: Recover t from C, J
-    p2 = (1.64 - 0.29**n)**0.73
+    p2 = (1.64 - 0.29**n) ** 0.73
     if J > 1e-12 and abs(p2) > 1e-12:
-        t = (C / ((J / 100.0)**0.5 * p2)) ** (1.0 / 0.9)
+        t = (C / ((J / 100.0) ** 0.5 * p2)) ** (1.0 / 0.9)
     else:
         t = 0.0
 
@@ -580,11 +601,13 @@ def ciecam02_inverse(
     RGB_c = M_CAT02 @ (M_HPE_INV @ RGB_p)
 
     # Step 8: Undo degree-of-adaptation
-    RGB = np.array([
-        RGB_c[0] / D_R,
-        RGB_c[1] / D_G,
-        RGB_c[2] / D_B,
-    ])
+    RGB = np.array(
+        [
+            RGB_c[0] / D_R,
+            RGB_c[1] / D_G,
+            RGB_c[2] / D_B,
+        ]
+    )
 
     # Step 9: CAT02 inverse -> XYZ
     xyz = M_CAT02_INV @ RGB
@@ -596,6 +619,7 @@ def ciecam02_inverse(
 # CAM16 Forward Model
 # =============================================================================
 
+
 @dataclass
 class CAM16Color:
     """
@@ -604,6 +628,7 @@ class CAM16Color:
     Same attributes as CIECAM02Color but computed with the updated
     CAM16 chromatic adaptation transform.
     """
+
     J: float
     C: float
     h: float
@@ -622,18 +647,14 @@ def _compute_cam16_params(vc: ViewingConditions) -> dict:
     """
     surround = SURROUND.get(vc.surround.lower())
     if surround is None:
-        raise ValueError(
-            f"Unknown surround: {vc.surround}. "
-            f"Options: {list(SURROUND.keys())}"
-        )
+        raise ValueError(f"Unknown surround: {vc.surround}. Options: {list(SURROUND.keys())}")
 
     c = surround["c"]
     Nc = surround["Nc"]
     F = surround["F"]
 
     k = 1.0 / (5.0 * vc.L_A + 1.0)
-    F_L = (0.2 * k**4 * 5.0 * vc.L_A +
-           0.1 * (1.0 - k**4)**2 * (5.0 * vc.L_A)**(1.0 / 3.0))
+    F_L = 0.2 * k**4 * 5.0 * vc.L_A + 0.1 * (1.0 - k**4) ** 2 * (5.0 * vc.L_A) ** (1.0 / 3.0)
 
     n = vc.Y_b / vc.white_point[1]
     Nbb = 0.725 * (1.0 / n) ** 0.2
@@ -657,10 +678,20 @@ def _compute_cam16_params(vc: ViewingConditions) -> dict:
     A_w = (2.0 * RGB_aw[0] + RGB_aw[1] + 0.05 * RGB_aw[2] - 0.305) * Nbb
 
     return {
-        "c": c, "Nc": Nc, "F": F, "F_L": F_L,
-        "n": n, "Nbb": Nbb, "Ncb": Ncb, "z": z,
-        "D": D, "D_R": D_R, "D_G": D_G, "D_B": D_B,
-        "RGB_w": RGB_w, "A_w": A_w,
+        "c": c,
+        "Nc": Nc,
+        "F": F,
+        "F_L": F_L,
+        "n": n,
+        "Nbb": Nbb,
+        "Ncb": Ncb,
+        "z": z,
+        "D": D,
+        "D_R": D_R,
+        "D_G": D_G,
+        "D_B": D_B,
+        "RGB_w": RGB_w,
+        "A_w": A_w,
     }
 
 
@@ -736,21 +767,21 @@ def cam16_forward(
     J = 100.0 * (A / A_w) ** (c * z)
 
     # Step 9: Brightness Q
-    Q = (4.0 / c) * (J / 100.0) ** 0.5 * (A_w + 4.0) * F_L ** 0.25
+    Q = (4.0 / c) * (J / 100.0) ** 0.5 * (A_w + 4.0) * F_L**0.25
 
     # Step 10: Chroma
     t_num = (50000.0 / 13.0) * Nc * Ncb * e_t * np.sqrt(a**2 + b**2)
     t_den = RGB_a[0] + RGB_a[1] + 21.0 * RGB_a[2] / 20.0
     t = t_num / max(t_den, 1e-12)
 
-    C = t**0.9 * (J / 100.0)**0.5 * (1.64 - 0.29**n)**0.73
+    C = t**0.9 * (J / 100.0) ** 0.5 * (1.64 - 0.29**n) ** 0.73
 
     # Step 11: Colorfulness M
     M = C * F_L**0.25
 
     # Step 12: Saturation s
     if Q > 1e-12:
-        s = 100.0 * (M / Q)**0.5
+        s = 100.0 * (M / Q) ** 0.5
     else:
         s = 0.0
 
@@ -760,6 +791,7 @@ def cam16_forward(
 # =============================================================================
 # CAM16-UCS (Uniform Color Space)
 # =============================================================================
+
 
 def cam16_ucs(
     xyz: np.ndarray,
@@ -827,6 +859,7 @@ def delta_e_cam16(
 # =============================================================================
 # Batch / convenience helpers
 # =============================================================================
+
 
 def ciecam02_forward_batch(
     xyz_array: np.ndarray,

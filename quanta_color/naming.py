@@ -11,7 +11,6 @@ Functions:
     all_css_colors      - Full CSS named colors dictionary
 """
 
-
 import numpy as np
 
 # =============================================================================
@@ -188,6 +187,7 @@ _BASIC_COLORS: dict[str, tuple[int, int, int]] = {
 def _rgb_to_oklab(rgb_255: tuple[int, int, int]) -> np.ndarray:
     """Convert 0-255 RGB to Oklab. Internal helper."""
     from quanta_color.spaces import srgb_to_oklab
+
     srgb = np.array(rgb_255, dtype=np.float64) / 255.0
     return srgb_to_oklab(srgb)
 
@@ -209,6 +209,7 @@ def nearest_css_name(rgb: np.ndarray) -> tuple[str, float]:
         (name, distance) where distance is Euclidean in Oklab space.
     """
     from quanta_color.spaces import srgb_to_oklab
+
     rgb = np.asarray(rgb, dtype=np.float64)
     target_oklab = srgb_to_oklab(rgb)
 
@@ -238,6 +239,7 @@ def nearest_basic_name(rgb: np.ndarray) -> str:
         Basic color name string.
     """
     from quanta_color.spaces import srgb_to_oklab
+
     rgb = np.asarray(rgb, dtype=np.float64)
     target_oklab = srgb_to_oklab(rgb)
 
@@ -266,6 +268,7 @@ def color_description(rgb: np.ndarray) -> str:
         Description string, e.g., "dark muted red", "light vivid blue".
     """
     from quanta_color.spaces import oklab_to_oklch, srgb_to_oklab
+
     rgb = np.asarray(rgb, dtype=np.float64)
     oklab = srgb_to_oklab(rgb)
     oklch = oklab_to_oklch(oklab)

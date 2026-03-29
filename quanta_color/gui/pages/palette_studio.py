@@ -206,12 +206,10 @@ class PaletteStudioPage(QWidget):
 
         try:
             from quanta_color.harmony import generate
+
             colors = generate(base, self._current_scheme)
             self._palette_rgb = [
-                (float(np.clip(c[0], 0, 1)),
-                 float(np.clip(c[1], 0, 1)),
-                 float(np.clip(c[2], 0, 1)))
-                for c in colors
+                (float(np.clip(c[0], 0, 1)), float(np.clip(c[1], 0, 1)), float(np.clip(c[2], 0, 1))) for c in colors
             ]
         except Exception:
             # Fallback: simple hue rotation
@@ -244,8 +242,7 @@ class PaletteStudioPage(QWidget):
             lbl = QLabel(hex_str)
             lbl.setAlignment(Qt.AlignmentFlag.AlignCenter)
             lbl.setStyleSheet(
-                f"font-size: 10px; color: {C.TEXT2}; "
-                f"font-family: 'Cascadia Code', 'Consolas', monospace;"
+                f"font-size: 10px; color: {C.TEXT2}; font-family: 'Cascadia Code', 'Consolas', monospace;"
             )
 
             wrapper = QWidget()
@@ -293,6 +290,7 @@ class PaletteStudioPage(QWidget):
                         import numpy as np
 
                         from quanta_color.blindness import simulate
+
                         srgb = np.array([r, g, b])
                         sim = simulate(srgb, deficiency, severity=1.0)
                         sim = np.clip(sim, 0.0, 1.0)
@@ -321,13 +319,16 @@ class PaletteStudioPage(QWidget):
 
     def _copy_json(self):
         import json
+
         data = []
         for r, g, b in self._palette_rgb:
             hex_str = f"#{int(r * 255 + 0.5):02x}{int(g * 255 + 0.5):02x}{int(b * 255 + 0.5):02x}"
-            data.append({
-                "hex": hex_str,
-                "rgb": [int(r * 255 + 0.5), int(g * 255 + 0.5), int(b * 255 + 0.5)],
-            })
+            data.append(
+                {
+                    "hex": hex_str,
+                    "rgb": [int(r * 255 + 0.5), int(g * 255 + 0.5), int(b * 255 + 0.5)],
+                }
+            )
         text = json.dumps(data, indent=2)
         clipboard = QApplication.clipboard()
         if clipboard:
@@ -341,11 +342,16 @@ class PaletteStudioPage(QWidget):
     def _get_scheme_names() -> list:
         try:
             from quanta_color.harmony import SCHEMES
+
             return list(SCHEMES.keys())
         except Exception:
             return [
-                "complementary", "split_complementary", "triadic",
-                "tetradic", "analogous", "monochromatic",
+                "complementary",
+                "split_complementary",
+                "triadic",
+                "tetradic",
+                "analogous",
+                "monochromatic",
             ]
 
     @staticmethod

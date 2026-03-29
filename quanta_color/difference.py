@@ -15,7 +15,6 @@ Metrics:
     contrast_ratio  - WCAG contrast ratio
 """
 
-
 import numpy as np
 
 
@@ -26,8 +25,7 @@ def delta_e_76(lab1: np.ndarray, lab2: np.ndarray) -> np.ndarray:
     return np.sqrt(np.sum(d * d, axis=-1))
 
 
-def delta_e_94(lab1: np.ndarray, lab2: np.ndarray,
-               application: str = "graphic_arts") -> np.ndarray:
+def delta_e_94(lab1: np.ndarray, lab2: np.ndarray, application: str = "graphic_arts") -> np.ndarray:
     """
     CIE 1994 color difference.
 
@@ -37,8 +35,8 @@ def delta_e_94(lab1: np.ndarray, lab2: np.ndarray,
     lab1, lab2 = np.asarray(lab1, dtype=np.float64), np.asarray(lab2, dtype=np.float64)
 
     dL = lab1[..., 0] - lab2[..., 0]
-    C1 = np.sqrt(lab1[..., 1]**2 + lab1[..., 2]**2)
-    C2 = np.sqrt(lab2[..., 1]**2 + lab2[..., 2]**2)
+    C1 = np.sqrt(lab1[..., 1] ** 2 + lab1[..., 2] ** 2)
+    C2 = np.sqrt(lab2[..., 1] ** 2 + lab2[..., 2] ** 2)
     dC = C1 - C2
     da = lab1[..., 1] - lab2[..., 1]
     db = lab1[..., 2] - lab2[..., 2]
@@ -53,11 +51,10 @@ def delta_e_94(lab1: np.ndarray, lab2: np.ndarray,
     SC = 1.0 + K1 * C1
     SH = 1.0 + K2 * C1
 
-    return np.sqrt((dL / (kL * SL))**2 + (dC / SC)**2 + dH_sq / SH**2)
+    return np.sqrt((dL / (kL * SL)) ** 2 + (dC / SC) ** 2 + dH_sq / SH**2)
 
 
-def delta_e_2000(lab1: np.ndarray, lab2: np.ndarray,
-                  kL: float = 1.0, kC: float = 1.0, kH: float = 1.0) -> np.ndarray:
+def delta_e_2000(lab1: np.ndarray, lab2: np.ndarray, kL: float = 1.0, kC: float = 1.0, kH: float = 1.0) -> np.ndarray:
     """
     CIEDE2000 color difference (the standard for display calibration).
 
@@ -84,44 +81,50 @@ def delta_e_2000(lab1: np.ndarray, lab2: np.ndarray,
     dCp = C2p - C1p
 
     dhp = np.where(
-        C1p * C2p == 0, 0.0,
-        np.where(np.abs(h2p - h1p) <= 180, h2p - h1p,
-                 np.where(h2p - h1p > 180, h2p - h1p - 360, h2p - h1p + 360))
+        C1p * C2p == 0,
+        0.0,
+        np.where(np.abs(h2p - h1p) <= 180, h2p - h1p, np.where(h2p - h1p > 180, h2p - h1p - 360, h2p - h1p + 360)),
     )
     dHp = 2.0 * np.sqrt(C1p * C2p) * np.sin(np.radians(dhp / 2.0))
 
     L_avg = (L1 + L2) / 2.0
     Cp_avg = (C1p + C2p) / 2.0
     hp_avg = np.where(
-        C1p * C2p == 0, h1p + h2p,
-        np.where(np.abs(h1p - h2p) <= 180, (h1p + h2p) / 2.0,
-                 np.where(h1p + h2p < 360, (h1p + h2p + 360) / 2.0, (h1p + h2p - 360) / 2.0))
+        C1p * C2p == 0,
+        h1p + h2p,
+        np.where(
+            np.abs(h1p - h2p) <= 180,
+            (h1p + h2p) / 2.0,
+            np.where(h1p + h2p < 360, (h1p + h2p + 360) / 2.0, (h1p + h2p - 360) / 2.0),
+        ),
     )
 
-    T = (1.0 - 0.17 * np.cos(np.radians(hp_avg - 30)) +
-         0.24 * np.cos(np.radians(2 * hp_avg)) +
-         0.32 * np.cos(np.radians(3 * hp_avg + 6)) -
-         0.20 * np.cos(np.radians(4 * hp_avg - 63)))
+    T = (
+        1.0
+        - 0.17 * np.cos(np.radians(hp_avg - 30))
+        + 0.24 * np.cos(np.radians(2 * hp_avg))
+        + 0.32 * np.cos(np.radians(3 * hp_avg + 6))
+        - 0.20 * np.cos(np.radians(4 * hp_avg - 63))
+    )
 
-    SL = 1.0 + 0.015 * (L_avg - 50)**2 / np.sqrt(20 + (L_avg - 50)**2)
+    SL = 1.0 + 0.015 * (L_avg - 50) ** 2 / np.sqrt(20 + (L_avg - 50) ** 2)
     SC = 1.0 + 0.045 * Cp_avg
     SH = 1.0 + 0.015 * Cp_avg * T
 
     Cp_avg7 = Cp_avg**7
     RC = 2.0 * np.sqrt(Cp_avg7 / (Cp_avg7 + 25.0**7))
-    d_theta = 30.0 * np.exp(-((hp_avg - 275) / 25.0)**2)
+    d_theta = 30.0 * np.exp(-(((hp_avg - 275) / 25.0) ** 2))
     RT = -np.sin(np.radians(2 * d_theta)) * RC
 
     return np.sqrt(
-        (dLp / (kL * SL))**2 +
-        (dCp / (kC * SC))**2 +
-        (dHp / (kH * SH))**2 +
-        RT * (dCp / (kC * SC)) * (dHp / (kH * SH))
+        (dLp / (kL * SL)) ** 2
+        + (dCp / (kC * SC)) ** 2
+        + (dHp / (kH * SH)) ** 2
+        + RT * (dCp / (kC * SC)) * (dHp / (kH * SH))
     )
 
 
-def delta_e_cmc(lab1: np.ndarray, lab2: np.ndarray,
-                l: float = 2.0, c: float = 1.0) -> np.ndarray:
+def delta_e_cmc(lab1: np.ndarray, lab2: np.ndarray, l: float = 2.0, c: float = 1.0) -> np.ndarray:
     """
     CMC(l:c) color difference (asymmetric — order matters).
 
@@ -153,7 +156,7 @@ def delta_e_cmc(lab1: np.ndarray, lab2: np.ndarray,
     )
     SH = SC * (F * T + 1.0 - F)
 
-    return np.sqrt((dL / (l * SL))**2 + (dC / (c * SC))**2 + dH_sq / SH**2)
+    return np.sqrt((dL / (l * SL)) ** 2 + (dC / (c * SC)) ** 2 + dH_sq / SH**2)
 
 
 def delta_e_jzazbz(jzazbz1: np.ndarray, jzazbz2: np.ndarray) -> np.ndarray:

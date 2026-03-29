@@ -25,7 +25,6 @@ Spaces:
     HSV / HSL   - Hue-based models
 """
 
-
 import numpy as np
 
 # =============================================================================
@@ -33,66 +32,90 @@ import numpy as np
 # =============================================================================
 
 # sRGB <-> XYZ (D65)
-SRGB_TO_XYZ = np.array([
-    [0.4124564, 0.3575761, 0.1804375],
-    [0.2126729, 0.7151522, 0.0721750],
-    [0.0193339, 0.1191920, 0.9503041],
-], dtype=np.float64)
+SRGB_TO_XYZ = np.array(
+    [
+        [0.4124564, 0.3575761, 0.1804375],
+        [0.2126729, 0.7151522, 0.0721750],
+        [0.0193339, 0.1191920, 0.9503041],
+    ],
+    dtype=np.float64,
+)
 
-XYZ_TO_SRGB = np.array([
-    [ 3.2404542, -1.5371385, -0.4985314],
-    [-0.9692660,  1.8760108,  0.0415560],
-    [ 0.0556434, -0.2040259,  1.0572252],
-], dtype=np.float64)
+XYZ_TO_SRGB = np.array(
+    [
+        [3.2404542, -1.5371385, -0.4985314],
+        [-0.9692660, 1.8760108, 0.0415560],
+        [0.0556434, -0.2040259, 1.0572252],
+    ],
+    dtype=np.float64,
+)
 
 # Display P3 <-> XYZ (D65)
-P3_TO_XYZ = np.array([
-    [0.4865709, 0.2656677, 0.1982173],
-    [0.2289746, 0.6917385, 0.0792869],
-    [0.0000000, 0.0451134, 1.0439444],
-], dtype=np.float64)
+P3_TO_XYZ = np.array(
+    [
+        [0.4865709, 0.2656677, 0.1982173],
+        [0.2289746, 0.6917385, 0.0792869],
+        [0.0000000, 0.0451134, 1.0439444],
+    ],
+    dtype=np.float64,
+)
 
 XYZ_TO_P3 = np.linalg.inv(P3_TO_XYZ)
 
 # BT.2020 <-> XYZ (D65)
-BT2020_TO_XYZ = np.array([
-    [0.6369580, 0.1446169, 0.1688810],
-    [0.2627002, 0.6779981, 0.0593017],
-    [0.0000000, 0.0280727, 1.0609851],
-], dtype=np.float64)
+BT2020_TO_XYZ = np.array(
+    [
+        [0.6369580, 0.1446169, 0.1688810],
+        [0.2627002, 0.6779981, 0.0593017],
+        [0.0000000, 0.0280727, 1.0609851],
+    ],
+    dtype=np.float64,
+)
 
 XYZ_TO_BT2020 = np.linalg.inv(BT2020_TO_XYZ)
 
 # Adobe RGB <-> XYZ (D65)
-ADOBE_TO_XYZ = np.array([
-    [0.5767309, 0.1855540, 0.1881852],
-    [0.2973769, 0.6273491, 0.0752741],
-    [0.0270343, 0.0706872, 0.9911085],
-], dtype=np.float64)
+ADOBE_TO_XYZ = np.array(
+    [
+        [0.5767309, 0.1855540, 0.1881852],
+        [0.2973769, 0.6273491, 0.0752741],
+        [0.0270343, 0.0706872, 0.9911085],
+    ],
+    dtype=np.float64,
+)
 
 XYZ_TO_ADOBE = np.linalg.inv(ADOBE_TO_XYZ)
 
 # ACEScg <-> XYZ (D65, AP1 primaries)
-ACESCG_TO_XYZ = np.array([
-    [0.6624542, 0.1340042, 0.1561877],
-    [0.2722287, 0.6740818, 0.0536895],
-    [-0.0055746, 0.0040607, 1.0103391],
-], dtype=np.float64)
+ACESCG_TO_XYZ = np.array(
+    [
+        [0.6624542, 0.1340042, 0.1561877],
+        [0.2722287, 0.6740818, 0.0536895],
+        [-0.0055746, 0.0040607, 1.0103391],
+    ],
+    dtype=np.float64,
+)
 
 XYZ_TO_ACESCG = np.linalg.inv(ACESCG_TO_XYZ)
 
 # Oklab matrices
-_OKLAB_M1 = np.array([
-    [0.8189330101, 0.3618667424, -0.1288597137],
-    [0.0329845436, 0.9293118715,  0.0361456387],
-    [0.0482003018, 0.2643662691,  0.6338517070],
-], dtype=np.float64)
+_OKLAB_M1 = np.array(
+    [
+        [0.8189330101, 0.3618667424, -0.1288597137],
+        [0.0329845436, 0.9293118715, 0.0361456387],
+        [0.0482003018, 0.2643662691, 0.6338517070],
+    ],
+    dtype=np.float64,
+)
 
-_OKLAB_M2 = np.array([
-    [0.2104542553, 0.7936177850, -0.0040720468],
-    [1.9779984951, -2.4285922050, 0.4505937099],
-    [0.0259040371, 0.7827717662, -0.8086757660],
-], dtype=np.float64)
+_OKLAB_M2 = np.array(
+    [
+        [0.2104542553, 0.7936177850, -0.0040720468],
+        [1.9779984951, -2.4285922050, 0.4505937099],
+        [0.0259040371, 0.7827717662, -0.8086757660],
+    ],
+    dtype=np.float64,
+)
 
 _OKLAB_M1_INV = np.linalg.inv(_OKLAB_M1)
 _OKLAB_M2_INV = np.linalg.inv(_OKLAB_M2)
@@ -105,23 +128,23 @@ D65 = np.array([0.95047, 1.0, 1.08883])
 # sRGB gamma
 # =============================================================================
 
+
 def srgb_to_linear(srgb: np.ndarray) -> np.ndarray:
     """sRGB gamma decode (signal -> linear light)."""
     s = np.asarray(srgb, dtype=np.float64)
-    return np.where(s <= 0.04045, s / 12.92,
-                    np.power((s + 0.055) / 1.055, 2.4))
+    return np.where(s <= 0.04045, s / 12.92, np.power((s + 0.055) / 1.055, 2.4))
 
 
 def linear_to_srgb(linear: np.ndarray) -> np.ndarray:
     """sRGB gamma encode (linear light -> signal)."""
     c = np.asarray(linear, dtype=np.float64)
-    return np.where(c <= 0.0031308, c * 12.92,
-                    1.055 * np.power(np.maximum(c, 0), 1.0 / 2.4) - 0.055)
+    return np.where(c <= 0.0031308, c * 12.92, 1.055 * np.power(np.maximum(c, 0), 1.0 / 2.4) - 0.055)
 
 
 # =============================================================================
 # XYZ conversions
 # =============================================================================
+
 
 def srgb_to_xyz(srgb: np.ndarray) -> np.ndarray:
     """sRGB (0-1) -> XYZ (D65)."""
@@ -166,18 +189,15 @@ def xyY_to_xyz(xyY: np.ndarray) -> np.ndarray:
 # CIELAB
 # =============================================================================
 
+
 def _lab_f(t: np.ndarray) -> np.ndarray:
     delta = 6.0 / 29.0
-    return np.where(t > delta**3,
-                    np.cbrt(t),
-                    t / (3 * delta**2) + 4.0 / 29.0)
+    return np.where(t > delta**3, np.cbrt(t), t / (3 * delta**2) + 4.0 / 29.0)
 
 
 def _lab_f_inv(t: np.ndarray) -> np.ndarray:
     delta = 6.0 / 29.0
-    return np.where(t > delta,
-                    t**3,
-                    3 * delta**2 * (t - 4.0 / 29.0))
+    return np.where(t > delta, t**3, 3 * delta**2 * (t - 4.0 / 29.0))
 
 
 def xyz_to_lab(xyz: np.ndarray, white: np.ndarray = D50) -> np.ndarray:
@@ -223,6 +243,7 @@ def lch_to_lab(lch: np.ndarray) -> np.ndarray:
 # =============================================================================
 # Oklab / Oklch
 # =============================================================================
+
 
 def linear_srgb_to_oklab(rgb: np.ndarray) -> np.ndarray:
     """Linear sRGB -> Oklab."""
@@ -292,17 +313,23 @@ _JZ_P = 134.034375
 _JZ_D = -0.56
 _JZ_D0 = 1.6295499532821566e-11
 
-_JZ_M1 = np.array([
-    [ 0.41478972, 0.57999900, 0.01464800],
-    [-0.20151000, 1.12064900, 0.05310080],
-    [-0.01660080, 0.26480000, 0.66847990],
-], dtype=np.float64)
+_JZ_M1 = np.array(
+    [
+        [0.41478972, 0.57999900, 0.01464800],
+        [-0.20151000, 1.12064900, 0.05310080],
+        [-0.01660080, 0.26480000, 0.66847990],
+    ],
+    dtype=np.float64,
+)
 
-_JZ_M2 = np.array([
-    [ 0.5,        0.5,        0.0       ],
-    [ 3.524000,  -4.066708,   0.542708  ],
-    [ 0.199076,   1.096799,  -1.295875  ],
-], dtype=np.float64)
+_JZ_M2 = np.array(
+    [
+        [0.5, 0.5, 0.0],
+        [3.524000, -4.066708, 0.542708],
+        [0.199076, 1.096799, -1.295875],
+    ],
+    dtype=np.float64,
+)
 
 _JZ_M1_INV = np.linalg.inv(_JZ_M1)
 _JZ_M2_INV = np.linalg.inv(_JZ_M2)
@@ -315,9 +342,7 @@ def _pq_encode(x: np.ndarray) -> np.ndarray:
 
 def _pq_decode(x: np.ndarray) -> np.ndarray:
     xp = np.power(np.maximum(x, 0), 1.0 / _JZ_P)
-    return 10000.0 * np.power(
-        np.maximum(xp - _JZ_C1, 0) / (_JZ_C2 - _JZ_C3 * xp), 1.0 / _JZ_N
-    )
+    return 10000.0 * np.power(np.maximum(xp - _JZ_C1, 0) / (_JZ_C2 - _JZ_C3 * xp), 1.0 / _JZ_N)
 
 
 def xyz_to_jzazbz(xyz: np.ndarray) -> np.ndarray:
@@ -389,17 +414,26 @@ def jzczhz_to_jzazbz(jzczhz: np.ndarray) -> np.ndarray:
 # ICtCp (Dolby HDR)
 # =============================================================================
 
-_ICTCP_M1 = np.array([
-    [0.3592832590121217, 0.6976051147779502, -0.0358915932320290],
-    [-0.1920808463704993, 1.1004767970374321, 0.0753748658519118],
-    [0.0070797844607479, 0.0748396662186362, 0.8433265453898765],
-], dtype=np.float64)
+_ICTCP_M1 = np.array(
+    [
+        [0.3592832590121217, 0.6976051147779502, -0.0358915932320290],
+        [-0.1920808463704993, 1.1004767970374321, 0.0753748658519118],
+        [0.0070797844607479, 0.0748396662186362, 0.8433265453898765],
+    ],
+    dtype=np.float64,
+)
 
-_ICTCP_M2 = np.array([
-    [2048, 2048, 0],
-    [6610, -13613, 7003],
-    [17933, -17390, -543],
-], dtype=np.float64) / 4096.0
+_ICTCP_M2 = (
+    np.array(
+        [
+            [2048, 2048, 0],
+            [6610, -13613, 7003],
+            [17933, -17390, -543],
+        ],
+        dtype=np.float64,
+    )
+    / 4096.0
+)
 
 
 def xyz_to_ictcp(xyz: np.ndarray) -> np.ndarray:
@@ -419,6 +453,7 @@ def xyz_to_ictcp(xyz: np.ndarray) -> np.ndarray:
 # HSV / HSL
 # =============================================================================
 
+
 def rgb_to_hsv(rgb: np.ndarray) -> np.ndarray:
     """sRGB (0-1) -> HSV."""
     rgb = np.asarray(rgb, dtype=np.float64)
@@ -427,11 +462,16 @@ def rgb_to_hsv(rgb: np.ndarray) -> np.ndarray:
     cmin = np.minimum(np.minimum(r, g), b)
     delta = cmax - cmin
 
-    with np.errstate(divide='ignore', invalid='ignore'):
-        h = np.where(delta == 0, 0,
-            np.where(cmax == r, 60 * (((g - b) / delta) % 6),
-            np.where(cmax == g, 60 * ((b - r) / delta + 2),
-                                 60 * ((r - g) / delta + 4))))
+    with np.errstate(divide="ignore", invalid="ignore"):
+        h = np.where(
+            delta == 0,
+            0,
+            np.where(
+                cmax == r,
+                60 * (((g - b) / delta) % 6),
+                np.where(cmax == g, 60 * ((b - r) / delta + 2), 60 * ((r - g) / delta + 4)),
+            ),
+        )
         s = np.where(cmax == 0, 0, delta / cmax)
     v = cmax
     return np.stack([h, s, v], axis=-1)
@@ -455,6 +495,7 @@ def hsv_to_rgb(hsv: np.ndarray) -> np.ndarray:
 # =============================================================================
 # Wide gamut conversions
 # =============================================================================
+
 
 def srgb_to_p3(srgb: np.ndarray) -> np.ndarray:
     """sRGB -> Display P3 (both gamma-encoded)."""
@@ -482,6 +523,7 @@ def srgb_to_acescg(srgb: np.ndarray) -> np.ndarray:
 # Utility
 # =============================================================================
 
+
 def primaries_to_matrix(
     r_xy: tuple[float, float],
     g_xy: tuple[float, float],
@@ -489,6 +531,7 @@ def primaries_to_matrix(
     w_xy: tuple[float, float],
 ) -> np.ndarray:
     """Compute RGB-to-XYZ matrix from chromaticity coordinates."""
+
     def xy_to_XYZ(x, y):
         return np.array([x / y, 1.0, (1 - x - y) / y])
 

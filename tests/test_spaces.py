@@ -1,4 +1,5 @@
 """Comprehensive tests for color space conversions."""
+
 import numpy as np
 import pytest
 
@@ -36,17 +37,21 @@ from quanta_color.spaces import (
 # Roundtrip tests
 # =========================================================================
 
+
 class TestSRGBXYZRoundtrip:
     """sRGB <-> XYZ roundtrip."""
 
-    @pytest.mark.parametrize("color", [
-        np.array([1.0, 0.0, 0.0]),
-        np.array([0.0, 1.0, 0.0]),
-        np.array([0.0, 0.0, 1.0]),
-        np.array([1.0, 1.0, 1.0]),
-        np.array([0.5, 0.5, 0.5]),
-        np.array([0.18, 0.18, 0.18]),
-    ])
+    @pytest.mark.parametrize(
+        "color",
+        [
+            np.array([1.0, 0.0, 0.0]),
+            np.array([0.0, 1.0, 0.0]),
+            np.array([0.0, 0.0, 1.0]),
+            np.array([1.0, 1.0, 1.0]),
+            np.array([0.5, 0.5, 0.5]),
+            np.array([0.18, 0.18, 0.18]),
+        ],
+    )
     def test_roundtrip(self, color):
         xyz = srgb_to_xyz(color)
         recovered = xyz_to_srgb(xyz, clip=False)
@@ -56,13 +61,16 @@ class TestSRGBXYZRoundtrip:
 class TestSRGBOklabRoundtrip:
     """sRGB <-> Oklab roundtrip."""
 
-    @pytest.mark.parametrize("color", [
-        np.array([1.0, 0.0, 0.0]),
-        np.array([0.0, 1.0, 0.0]),
-        np.array([0.0, 0.0, 1.0]),
-        np.array([1.0, 1.0, 1.0]),
-        np.array([0.5, 0.5, 0.5]),
-    ])
+    @pytest.mark.parametrize(
+        "color",
+        [
+            np.array([1.0, 0.0, 0.0]),
+            np.array([0.0, 1.0, 0.0]),
+            np.array([0.0, 0.0, 1.0]),
+            np.array([1.0, 1.0, 1.0]),
+            np.array([0.5, 0.5, 0.5]),
+        ],
+    )
     def test_roundtrip(self, color):
         oklab = srgb_to_oklab(color)
         recovered = oklab_to_srgb(oklab, clip=False)
@@ -72,12 +80,15 @@ class TestSRGBOklabRoundtrip:
 class TestXYZJzAzBzRoundtrip:
     """XYZ <-> JzAzBz roundtrip."""
 
-    @pytest.mark.parametrize("xyz_val", [
-        np.array([100.0, 100.0, 100.0]),
-        np.array([50.0, 50.0, 50.0]),
-        np.array([200.0, 200.0, 200.0]),
-        np.array([1000.0, 1000.0, 1000.0]),
-    ])
+    @pytest.mark.parametrize(
+        "xyz_val",
+        [
+            np.array([100.0, 100.0, 100.0]),
+            np.array([50.0, 50.0, 50.0]),
+            np.array([200.0, 200.0, 200.0]),
+            np.array([1000.0, 1000.0, 1000.0]),
+        ],
+    )
     def test_roundtrip(self, xyz_val):
         jzazbz = xyz_to_jzazbz(xyz_val)
         recovered = jzazbz_to_xyz(jzazbz)
@@ -87,11 +98,14 @@ class TestXYZJzAzBzRoundtrip:
 class TestXYZLabRoundtrip:
     """XYZ <-> Lab roundtrip."""
 
-    @pytest.mark.parametrize("xyz_val", [
-        D50,                                  # D50 white
-        np.array([0.5, 0.5, 0.5]),
-        np.array([0.2, 0.3, 0.4]),
-    ])
+    @pytest.mark.parametrize(
+        "xyz_val",
+        [
+            D50,  # D50 white
+            np.array([0.5, 0.5, 0.5]),
+            np.array([0.2, 0.3, 0.4]),
+        ],
+    )
     def test_roundtrip_d50(self, xyz_val):
         lab = xyz_to_lab(xyz_val, white=D50)
         recovered = lab_to_xyz(lab, white=D50)
@@ -107,11 +121,14 @@ class TestXYZLabRoundtrip:
 class TestLabLCHRoundtrip:
     """Lab <-> LCH roundtrip."""
 
-    @pytest.mark.parametrize("lab", [
-        np.array([50.0, 25.0, -10.0]),
-        np.array([80.0, -30.0, 40.0]),
-        np.array([20.0, 0.0, 0.0]),       # achromatic
-    ])
+    @pytest.mark.parametrize(
+        "lab",
+        [
+            np.array([50.0, 25.0, -10.0]),
+            np.array([80.0, -30.0, 40.0]),
+            np.array([20.0, 0.0, 0.0]),  # achromatic
+        ],
+    )
     def test_roundtrip(self, lab):
         lch = lab_to_lch(lab)
         recovered = lch_to_lab(lch)
@@ -121,11 +138,14 @@ class TestLabLCHRoundtrip:
 class TestOklabOklchRoundtrip:
     """Oklab <-> Oklch roundtrip."""
 
-    @pytest.mark.parametrize("oklab", [
-        np.array([0.5, 0.1, -0.05]),
-        np.array([0.8, -0.1, 0.1]),
-        np.array([0.3, 0.0, 0.0]),        # achromatic
-    ])
+    @pytest.mark.parametrize(
+        "oklab",
+        [
+            np.array([0.5, 0.1, -0.05]),
+            np.array([0.8, -0.1, 0.1]),
+            np.array([0.3, 0.0, 0.0]),  # achromatic
+        ],
+    )
     def test_roundtrip(self, oklab):
         oklch = oklab_to_oklch(oklab)
         recovered = oklch_to_oklab(oklch)
@@ -135,10 +155,13 @@ class TestOklabOklchRoundtrip:
 class TestJzAzBzJzCzhzRoundtrip:
     """JzAzBz <-> JzCzhz roundtrip."""
 
-    @pytest.mark.parametrize("jzazbz", [
-        np.array([0.5, 0.1, -0.05]),
-        np.array([0.2, -0.03, 0.04]),
-    ])
+    @pytest.mark.parametrize(
+        "jzazbz",
+        [
+            np.array([0.5, 0.1, -0.05]),
+            np.array([0.2, -0.03, 0.04]),
+        ],
+    )
     def test_roundtrip(self, jzazbz):
         jzczhz = jzazbz_to_jzczhz(jzazbz)
         recovered = jzczhz_to_jzazbz(jzczhz)
@@ -148,14 +171,17 @@ class TestJzAzBzJzCzhzRoundtrip:
 class TestRGBHSVRoundtrip:
     """RGB <-> HSV roundtrip."""
 
-    @pytest.mark.parametrize("rgb", [
-        np.array([1.0, 0.0, 0.0]),
-        np.array([0.0, 1.0, 0.0]),
-        np.array([0.0, 0.0, 1.0]),
-        np.array([1.0, 1.0, 1.0]),
-        np.array([0.5, 0.25, 0.75]),
-        np.array([0.0, 0.0, 0.0]),
-    ])
+    @pytest.mark.parametrize(
+        "rgb",
+        [
+            np.array([1.0, 0.0, 0.0]),
+            np.array([0.0, 1.0, 0.0]),
+            np.array([0.0, 0.0, 1.0]),
+            np.array([1.0, 1.0, 1.0]),
+            np.array([0.5, 0.25, 0.75]),
+            np.array([0.0, 0.0, 0.0]),
+        ],
+    )
     def test_roundtrip(self, rgb):
         hsv = rgb_to_hsv(rgb)
         recovered = hsv_to_rgb(hsv)
@@ -165,6 +191,7 @@ class TestRGBHSVRoundtrip:
 # =========================================================================
 # Known value tests
 # =========================================================================
+
 
 class TestKnownValues:
     """Test known reference values."""
@@ -234,6 +261,7 @@ class TestKnownValues:
 # Edge cases
 # =========================================================================
 
+
 class TestEdgeCases:
     """Edge case handling."""
 
@@ -287,64 +315,79 @@ class TestEdgeCases:
 # Batch processing
 # =========================================================================
 
+
 class TestBatchProcessing:
     """Verify (N,3) array support."""
 
     def test_srgb_to_xyz_batch(self):
-        colors = np.array([
-            [1.0, 0.0, 0.0],
-            [0.0, 1.0, 0.0],
-            [0.0, 0.0, 1.0],
-        ])
+        colors = np.array(
+            [
+                [1.0, 0.0, 0.0],
+                [0.0, 1.0, 0.0],
+                [0.0, 0.0, 1.0],
+            ]
+        )
         result = srgb_to_xyz(colors)
         assert result.shape == (3, 3)
 
     def test_xyz_to_srgb_batch(self):
-        xyz = np.array([
-            [0.4125, 0.2127, 0.0193],
-            [0.3576, 0.7152, 0.1192],
-        ])
+        xyz = np.array(
+            [
+                [0.4125, 0.2127, 0.0193],
+                [0.3576, 0.7152, 0.1192],
+            ]
+        )
         result = xyz_to_srgb(xyz)
         assert result.shape == (2, 3)
 
     def test_srgb_to_oklab_batch(self):
-        colors = np.array([
-            [0.5, 0.5, 0.5],
-            [0.8, 0.2, 0.1],
-        ])
+        colors = np.array(
+            [
+                [0.5, 0.5, 0.5],
+                [0.8, 0.2, 0.1],
+            ]
+        )
         result = srgb_to_oklab(colors)
         assert result.shape == (2, 3)
 
     def test_oklab_to_srgb_batch(self):
-        oklab = np.array([
-            [0.5, 0.0, 0.0],
-            [0.7, 0.1, -0.05],
-        ])
+        oklab = np.array(
+            [
+                [0.5, 0.0, 0.0],
+                [0.7, 0.1, -0.05],
+            ]
+        )
         result = oklab_to_srgb(oklab)
         assert result.shape == (2, 3)
 
     def test_xyz_to_lab_batch(self):
-        xyz = np.array([
-            [0.5, 0.5, 0.5],
-            [0.3, 0.4, 0.2],
-        ])
+        xyz = np.array(
+            [
+                [0.5, 0.5, 0.5],
+                [0.3, 0.4, 0.2],
+            ]
+        )
         result = xyz_to_lab(xyz)
         assert result.shape == (2, 3)
 
     def test_lab_to_lch_batch(self):
-        lab = np.array([
-            [50.0, 25.0, -10.0],
-            [80.0, -30.0, 40.0],
-        ])
+        lab = np.array(
+            [
+                [50.0, 25.0, -10.0],
+                [80.0, -30.0, 40.0],
+            ]
+        )
         result = lab_to_lch(lab)
         assert result.shape == (2, 3)
 
     def test_rgb_to_hsv_batch(self):
-        rgb = np.array([
-            [1.0, 0.0, 0.0],
-            [0.0, 1.0, 0.0],
-            [0.0, 0.0, 1.0],
-        ])
+        rgb = np.array(
+            [
+                [1.0, 0.0, 0.0],
+                [0.0, 1.0, 0.0],
+                [0.0, 0.0, 1.0],
+            ]
+        )
         result = rgb_to_hsv(rgb)
         assert result.shape == (3, 3)
 
@@ -358,6 +401,7 @@ class TestBatchProcessing:
 # =========================================================================
 # primaries_to_matrix
 # =========================================================================
+
 
 class TestPrimariesToMatrix:
     """Test primaries_to_matrix utility."""
@@ -379,6 +423,7 @@ class TestPrimariesToMatrix:
 # =========================================================================
 # Luminance
 # =========================================================================
+
 
 class TestLuminance:
     """Test luminance calculation."""
@@ -405,6 +450,7 @@ class TestLuminance:
 # =========================================================================
 # Wide gamut conversions
 # =========================================================================
+
 
 class TestWideGamut:
     """Test wide gamut conversion functions."""
@@ -441,6 +487,7 @@ class TestWideGamut:
 # =========================================================================
 # xyY
 # =========================================================================
+
 
 class TestXyY:
     """Test xyY conversions."""

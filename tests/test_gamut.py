@@ -1,4 +1,5 @@
 """Comprehensive tests for gamut mapping."""
+
 import numpy as np
 import pytest
 
@@ -13,6 +14,7 @@ from quanta_color.gamut import (
 # =========================================================================
 # clip
 # =========================================================================
+
 
 class TestClip:
     """Tests for simple gamut clipping."""
@@ -36,10 +38,12 @@ class TestClip:
         np.testing.assert_allclose(result, rgb, atol=1e-10)
 
     def test_clip_batch(self):
-        rgb = np.array([
-            [1.5, -0.1, 0.5],
-            [0.3, 0.6, 0.9],
-        ])
+        rgb = np.array(
+            [
+                [1.5, -0.1, 0.5],
+                [0.3, 0.6, 0.9],
+            ]
+        )
         result = clip(rgb)
         assert result.shape == (2, 3)
         assert np.all(result >= 0.0)
@@ -57,6 +61,7 @@ class TestClip:
 # =========================================================================
 # compress
 # =========================================================================
+
 
 class TestCompress:
     """Tests for soft gamut compression."""
@@ -81,10 +86,12 @@ class TestCompress:
         assert np.all(result >= 0.8)
 
     def test_compress_batch(self):
-        rgb = np.array([
-            [1.5, -0.1, 0.5],
-            [0.3, 0.6, 2.0],
-        ])
+        rgb = np.array(
+            [
+                [1.5, -0.1, 0.5],
+                [0.3, 0.6, 2.0],
+            ]
+        )
         result = compress(rgb)
         assert result.shape == (2, 3)
         assert np.all(result >= 0.0)
@@ -98,6 +105,7 @@ class TestCompress:
 # =========================================================================
 # is_in_gamut
 # =========================================================================
+
 
 class TestIsInGamut:
     """Tests for gamut membership checking."""
@@ -124,12 +132,14 @@ class TestIsInGamut:
         assert not is_in_gamut(rgb, tolerance=0.0)
 
     def test_batch_gamut_check(self):
-        rgb = np.array([
-            [0.5, 0.5, 0.5],    # in gamut
-            [1.1, 0.5, 0.5],    # out of gamut
-            [0.0, 0.0, 0.0],    # in gamut (black)
-            [1.0, 1.0, 1.0],    # in gamut (white)
-        ])
+        rgb = np.array(
+            [
+                [0.5, 0.5, 0.5],  # in gamut
+                [1.1, 0.5, 0.5],  # out of gamut
+                [0.0, 0.0, 0.0],  # in gamut (black)
+                [1.0, 1.0, 1.0],  # in gamut (white)
+            ]
+        )
         result = is_in_gamut(rgb)
         assert result.shape == (4,)
         assert result[0]
@@ -145,6 +155,7 @@ class TestIsInGamut:
 # =========================================================================
 # gamut_coverage
 # =========================================================================
+
 
 class TestGamutCoverage:
     """Tests for gamut coverage calculation."""
@@ -187,6 +198,7 @@ class TestGamutCoverage:
 # oklab_chroma_reduce
 # =========================================================================
 
+
 class TestOklabChromaReduce:
     """Tests for Oklab chroma reduction gamut mapping."""
 
@@ -207,6 +219,7 @@ class TestOklabChromaReduce:
     def test_preserves_lightness_approximately(self):
         """Chroma reduce should preserve lightness of the color."""
         from quanta_color.spaces import srgb_to_oklab
+
         srgb = np.array([0.8, 0.2, 0.1])
         oklab_orig = srgb_to_oklab(srgb)
         result = oklab_chroma_reduce(srgb)
@@ -216,11 +229,13 @@ class TestOklabChromaReduce:
 
     def test_batch_processing(self):
         """Should work with (N,3) arrays."""
-        srgb = np.array([
-            [0.8, 0.3, 0.5],
-            [0.2, 0.7, 0.1],
-            [0.5, 0.5, 0.5],
-        ])
+        srgb = np.array(
+            [
+                [0.8, 0.3, 0.5],
+                [0.2, 0.7, 0.1],
+                [0.5, 0.5, 0.5],
+            ]
+        )
         result = oklab_chroma_reduce(srgb)
         assert result.shape == (3, 3)
         assert np.all(result >= -0.01) and np.all(result <= 1.01)

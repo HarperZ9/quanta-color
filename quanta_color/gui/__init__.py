@@ -15,9 +15,8 @@ def launch():
     # Windows taskbar icon fix
     try:
         import ctypes
-        ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(
-            "quanta.quantacolor.1"
-        )
+
+        ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("quanta.quantacolor.1")
     except Exception:
         pass
 

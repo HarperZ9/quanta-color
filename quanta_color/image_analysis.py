@@ -14,12 +14,12 @@ Functions:
     cvd_problem_pairs   - Find palette pairs confusable under CVD
 """
 
-
 import numpy as np
 
 # =============================================================================
 # Histogram
 # =============================================================================
+
 
 def histogram(
     image: np.ndarray,
@@ -48,15 +48,18 @@ def histogram(
         _range_min, _range_max = 0.0, 1.0
     elif space == "oklab":
         from quanta_color.spaces import srgb_to_oklab
+
         data = srgb_to_oklab(pixels)
         _range_min, _range_max = -0.5, 1.5
     elif space == "lab":
         from quanta_color.spaces import srgb_to_xyz, xyz_to_lab
+
         xyz = srgb_to_xyz(pixels)
         data = xyz_to_lab(xyz)
         _range_min, _range_max = -128.0, 128.0
     elif space == "hsv":
         from quanta_color.spaces import rgb_to_hsv
+
         data = rgb_to_hsv(pixels)
         _range_min, _range_max = 0.0, 360.0
     else:
@@ -90,6 +93,7 @@ def histogram(
 # Gamut analysis
 # =============================================================================
 
+
 def gamut_coverage(
     image: np.ndarray,
     target: str = "srgb",
@@ -114,11 +118,13 @@ def gamut_coverage(
 
     if target == "srgb":
         from quanta_color.spaces import srgb_to_linear
+
         linear = srgb_to_linear(pixels)
         in_gamut = np.all(linear >= -tolerance, axis=-1) & np.all(linear <= 1.0 + tolerance, axis=-1)
 
     elif target == "display_p3":
         from quanta_color.spaces import SRGB_TO_XYZ, XYZ_TO_P3, srgb_to_linear
+
         linear = srgb_to_linear(pixels)
         xyz = (SRGB_TO_XYZ @ linear.T).T
         p3_linear = (XYZ_TO_P3 @ xyz.T).T
@@ -126,6 +132,7 @@ def gamut_coverage(
 
     elif target == "bt2020":
         from quanta_color.spaces import SRGB_TO_XYZ, XYZ_TO_BT2020, srgb_to_linear
+
         linear = srgb_to_linear(pixels)
         xyz = (SRGB_TO_XYZ @ linear.T).T
         bt2020_linear = (XYZ_TO_BT2020 @ xyz.T).T
@@ -158,11 +165,13 @@ def out_of_gamut_mask(
 
     if target == "srgb":
         from quanta_color.spaces import srgb_to_linear
+
         linear = srgb_to_linear(pixels)
         in_gamut = np.all(linear >= -tolerance, axis=-1) & np.all(linear <= 1.0 + tolerance, axis=-1)
 
     elif target == "display_p3":
         from quanta_color.spaces import SRGB_TO_XYZ, XYZ_TO_P3, srgb_to_linear
+
         linear = srgb_to_linear(pixels)
         xyz = (SRGB_TO_XYZ @ linear.T).T
         p3_linear = (XYZ_TO_P3 @ xyz.T).T
@@ -170,6 +179,7 @@ def out_of_gamut_mask(
 
     elif target == "bt2020":
         from quanta_color.spaces import SRGB_TO_XYZ, XYZ_TO_BT2020, srgb_to_linear
+
         linear = srgb_to_linear(pixels)
         xyz = (SRGB_TO_XYZ @ linear.T).T
         bt2020_linear = (XYZ_TO_BT2020 @ xyz.T).T
@@ -184,6 +194,7 @@ def out_of_gamut_mask(
 # =============================================================================
 # Dominant colors
 # =============================================================================
+
 
 def dominant_colors(
     image: np.ndarray,
@@ -219,6 +230,7 @@ def dominant_colors(
 
     try:
         from scipy.cluster.vq import kmeans2
+
         centroids, labels = kmeans2(oklab_pixels, n, minit="points", seed=42)
     except ImportError:
         centroids = _simple_kmeans(oklab_pixels, n, max_iter=30)
@@ -271,6 +283,7 @@ def _simple_kmeans(
 # WCAG accessibility
 # =============================================================================
 
+
 def wcag_check(fg_rgb: np.ndarray, bg_rgb: np.ndarray) -> dict:
     """
     Check WCAG 2.x contrast ratio between foreground and background colors.
@@ -308,6 +321,7 @@ def wcag_check(fg_rgb: np.ndarray, bg_rgb: np.ndarray) -> dict:
 # =============================================================================
 # CVD confusability
 # =============================================================================
+
 
 def cvd_problem_pairs(
     palette: list[np.ndarray],
@@ -364,12 +378,14 @@ def cvd_problem_pairs(
                 sim_dist = float(delta_e_oklab(sim_oklab_i, sim_oklab_j))
 
                 if sim_dist < oklab_threshold:
-                    problems.append({
-                        "i": i,
-                        "j": j,
-                        "deficiency": deficiency,
-                        "original_distance": original_dist,
-                        "simulated_distance": sim_dist,
-                    })
+                    problems.append(
+                        {
+                            "i": i,
+                            "j": j,
+                            "deficiency": deficiency,
+                            "original_distance": original_dist,
+                            "simulated_distance": sim_dist,
+                        }
+                    )
 
     return problems

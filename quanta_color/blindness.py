@@ -15,39 +15,45 @@ Usage:
     simulated = simulate(srgb_image, "deuteranopia", severity=1.0)
 """
 
-
 import numpy as np
 
 # Brettel et al. (1997) simulation matrices
 # Applied to linear sRGB values
 
-PROTANOPIA_MATRIX = np.array([
-    [0.152286, 1.052583, -0.204868],
-    [0.114503, 0.786281, 0.099216],
-    [-0.003882, -0.048116, 1.051998],
-], dtype=np.float64)
+PROTANOPIA_MATRIX = np.array(
+    [
+        [0.152286, 1.052583, -0.204868],
+        [0.114503, 0.786281, 0.099216],
+        [-0.003882, -0.048116, 1.051998],
+    ],
+    dtype=np.float64,
+)
 
-DEUTERANOPIA_MATRIX = np.array([
-    [0.367322, 0.860646, -0.227968],
-    [0.280085, 0.672501, 0.047413],
-    [-0.011820, 0.042940, 0.968881],
-], dtype=np.float64)
+DEUTERANOPIA_MATRIX = np.array(
+    [
+        [0.367322, 0.860646, -0.227968],
+        [0.280085, 0.672501, 0.047413],
+        [-0.011820, 0.042940, 0.968881],
+    ],
+    dtype=np.float64,
+)
 
-TRITANOPIA_MATRIX = np.array([
-    [1.255528, -0.076749, -0.178779],
-    [-0.078411, 0.930809, 0.147602],
-    [0.004733, 0.691367, 0.303900],
-], dtype=np.float64)
+TRITANOPIA_MATRIX = np.array(
+    [
+        [1.255528, -0.076749, -0.178779],
+        [-0.078411, 0.930809, 0.147602],
+        [0.004733, 0.691367, 0.303900],
+    ],
+    dtype=np.float64,
+)
 
 
 def _srgb_to_linear(s):
-    return np.where(s <= 0.04045, s / 12.92,
-                    np.power((s + 0.055) / 1.055, 2.4))
+    return np.where(s <= 0.04045, s / 12.92, np.power((s + 0.055) / 1.055, 2.4))
 
 
 def _linear_to_srgb(c):
-    return np.where(c <= 0.0031308, c * 12.92,
-                    1.055 * np.power(np.maximum(c, 0), 1.0 / 2.4) - 0.055)
+    return np.where(c <= 0.0031308, c * 12.92, 1.055 * np.power(np.maximum(c, 0), 1.0 / 2.4) - 0.055)
 
 
 def simulate(
@@ -88,8 +94,7 @@ def simulate(
     elif deficiency == "tritanopia":
         sim = _apply_matrix(linear, TRITANOPIA_MATRIX)
     else:
-        raise ValueError(f"Unknown deficiency: {deficiency}. "
-                         f"Use: protanopia, deuteranopia, tritanopia, achromatopsia")
+        raise ValueError(f"Unknown deficiency: {deficiency}. Use: protanopia, deuteranopia, tritanopia, achromatopsia")
 
     # Blend with original based on severity
     result = linear * (1 - severity) + sim * severity

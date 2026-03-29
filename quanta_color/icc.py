@@ -24,6 +24,7 @@ import numpy as np
 @dataclass
 class ICCProfile:
     """ICC v4 profile data ready for export."""
+
     data: bytes
     name: str = ""
 
@@ -108,6 +109,7 @@ def create_display_profile(
 
     # Chromatic adaptation (D65 -> D50, Bradford)
     from quanta_color.adaptation import ILLUMINANTS, get_adaptation_matrix
+
     chad = get_adaptation_matrix(ILLUMINANTS["D65"], ILLUMINANTS["D50"], "bradford")
     tags["chad"] = _make_s15f16_matrix_tag(chad)
 
@@ -122,8 +124,7 @@ def _generate_trc(gamma: float, points: int = 256) -> np.ndarray:
     t = np.linspace(0, 1, points)
     if abs(gamma - 2.2) < 0.01:
         # Use proper sRGB TRC
-        return np.where(t <= 0.04045, t / 12.92,
-                        np.power((t + 0.055) / 1.055, 2.4))
+        return np.where(t <= 0.04045, t / 12.92, np.power((t + 0.055) / 1.055, 2.4))
     return np.power(t, gamma)
 
 
@@ -242,36 +243,37 @@ def _assemble_profile(tags: dict, description: str) -> bytes:
     profile_size = current_offset
 
     # Fill header
-    struct.pack_into(">I", header, 0, profile_size)      # Profile size
-    header[4:8] = b"QNTC"                                 # Preferred CMM (Quanta Color)
-    struct.pack_into(">I", header, 8, 0x04400000)          # Version 4.4
-    header[12:16] = b"mntr"                                # Device class: monitor
-    header[16:20] = b"RGB "                                # Color space: RGB
-    header[20:24] = b"XYZ "                                # PCS: XYZ
+    struct.pack_into(">I", header, 0, profile_size)  # Profile size
+    header[4:8] = b"QNTC"  # Preferred CMM (Quanta Color)
+    struct.pack_into(">I", header, 8, 0x04400000)  # Version 4.4
+    header[12:16] = b"mntr"  # Device class: monitor
+    header[16:20] = b"RGB "  # Color space: RGB
+    header[20:24] = b"XYZ "  # PCS: XYZ
 
     # Date/time
     now = datetime.datetime.now()
-    struct.pack_into(">HHHHHH", header, 24,
-                     now.year, now.month, now.day,
-                     now.hour, now.minute, now.second)
+    struct.pack_into(">HHHHHH", header, 24, now.year, now.month, now.day, now.hour, now.minute, now.second)
 
-    header[36:40] = b"acsp"                                # File signature
-    header[40:44] = b"MSFT"                                # Primary platform (Windows)
-    struct.pack_into(">I", header, 44, 0)                  # Flags
-    header[48:52] = b"QNTC"                                # Device manufacturer
-    header[64:68] = b"\x00\x00\xf6\xd6"                   # D50 X (0.9642 as s15f16)
-    header[68:72] = b"\x00\x01\x00\x00"                   # D50 Y (1.0)
-    header[72:76] = b"\x00\x00\xd3\x2d"                   # D50 Z (0.8249)
-    header[80:84] = b"QNTC"                                # Profile creator
+    header[36:40] = b"acsp"  # File signature
+    header[40:44] = b"MSFT"  # Primary platform (Windows)
+    struct.pack_into(">I", header, 44, 0)  # Flags
+    header[48:52] = b"QNTC"  # Device manufacturer
+    header[64:68] = b"\x00\x00\xf6\xd6"  # D50 X (0.9642 as s15f16)
+    header[68:72] = b"\x00\x01\x00\x00"  # D50 Y (1.0)
+    header[72:76] = b"\x00\x00\xd3\x2d"  # D50 Z (0.8249)
+    header[80:84] = b"QNTC"  # Profile creator
 
     # Compute MD5 (profile ID)
-    full_data = bytes(header) + tag_table + b"".join(
-        b"".join(e for e in [entry]) for entry in tag_entries
-    ) + b"".join(tag_data_parts)
+    full_data = (
+        bytes(header)
+        + tag_table
+        + b"".join(b"".join(e for e in [entry]) for entry in tag_entries)
+        + b"".join(tag_data_parts)
+    )
 
     # Zero out fields that should not be included in ID computation
     id_header = bytearray(header)
-    id_header[44:48] = b"\x00" * 4   # Flags
+    id_header[44:48] = b"\x00" * 4  # Flags
     id_header[84:100] = b"\x00" * 16  # Profile ID field
 
     id_data = bytes(id_header) + full_data[128:]

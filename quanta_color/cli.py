@@ -143,8 +143,8 @@ def cmd_harmony(args):
     print(f"Scheme: {args.scheme}")
     print()
     for i, c in enumerate(palette):
-        ri, gi, bi = int(c[0]*255), int(c[1]*255), int(c[2]*255)
-        print(f"  {i+1}. #{ri:02x}{gi:02x}{bi:02x}  ({c[0]:.3f}, {c[1]:.3f}, {c[2]:.3f})")
+        ri, gi, bi = int(c[0] * 255), int(c[1] * 255), int(c[2] * 255)
+        print(f"  {i + 1}. #{ri:02x}{gi:02x}{bi:02x}  ({c[0]:.3f}, {c[1]:.3f}, {c[2]:.3f})")
     return 0
 
 
@@ -183,7 +183,7 @@ def cmd_info(args):
     lum = spaces.luminance(color)
     xyY = spaces.xyz_to_xyY(xyz)
 
-    ri, gi, bi = int(color[0]*255), int(color[1]*255), int(color[2]*255)
+    ri, gi, bi = int(color[0] * 255), int(color[1] * 255), int(color[2] * 255)
 
     print(f"Color: #{ri:02x}{gi:02x}{bi:02x}")
     print()
@@ -199,11 +199,13 @@ def cmd_info(args):
 
     # Dominant wavelength
     from quanta_color.spectral import dominant_wavelength
+
     dom = dominant_wavelength(xyY[0], xyY[1])
     print(f"  Dominant wavelength: {dom:.0f} nm")
 
     # WCAG contrast vs white and black
     from quanta_color.difference import contrast_ratio
+
     cr_white = contrast_ratio(lum, 1.0)
     cr_black = contrast_ratio(lum, 0.0)
     print(f"  Contrast vs white: {cr_white:.2f}:1")
@@ -279,7 +281,11 @@ def main():
     # harmony
     p = sub.add_parser("harmony", help="Generate color harmony palette")
     p.add_argument("color", help="Base color")
-    p.add_argument("--scheme", default="triadic", help="Scheme (complementary, split_complementary, triadic, tetradic, analogous, monochromatic)")
+    p.add_argument(
+        "--scheme",
+        default="triadic",
+        help="Scheme (complementary, split_complementary, triadic, tetradic, analogous, monochromatic)",
+    )
 
     # adapt
     p = sub.add_parser("adapt", help="Chromatic adaptation")
@@ -312,6 +318,7 @@ def main():
         # Default: launch GUI
         try:
             from quanta_color.gui import launch
+
             return launch()
         except ImportError:
             parser.print_help()
@@ -319,6 +326,7 @@ def main():
 
     if args.command == "gui":
         from quanta_color.gui import launch
+
         return launch()
 
     commands = {

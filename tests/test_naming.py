@@ -1,4 +1,5 @@
 """Tests for color naming module."""
+
 import numpy as np
 
 from quanta_color.naming import (

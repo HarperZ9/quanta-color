@@ -1,4 +1,5 @@
 """Tests for LUT I/O module."""
+
 import tempfile
 from pathlib import Path
 
@@ -72,11 +73,13 @@ class TestCubeRoundtrip:
 
     def test_1d_roundtrip(self):
         """Write and read back a 1D LUT."""
-        data = np.column_stack([
-            np.linspace(0, 1, 16),
-            np.linspace(0, 1, 16),
-            np.linspace(0, 1, 16),
-        ])
+        data = np.column_stack(
+            [
+                np.linspace(0, 1, 16),
+                np.linspace(0, 1, 16),
+                np.linspace(0, 1, 16),
+            ]
+        )
         lut = LUT1D(data=data, size=16, title="Test 1D")
 
         with tempfile.NamedTemporaryFile(suffix=".cube", delete=False) as f:

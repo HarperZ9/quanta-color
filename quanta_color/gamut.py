@@ -12,7 +12,6 @@ Methods:
     perceptual      - Binary search for max chroma at given hue/lightness
 """
 
-
 import numpy as np
 
 
@@ -21,8 +20,7 @@ def clip(rgb: np.ndarray) -> np.ndarray:
     return np.clip(np.asarray(rgb), 0.0, 1.0)
 
 
-def compress(rgb: np.ndarray, threshold: float = 0.8,
-             limit: float = 1.0, power: float = 1.2) -> np.ndarray:
+def compress(rgb: np.ndarray, threshold: float = 0.8, limit: float = 1.0, power: float = 1.2) -> np.ndarray:
     """
     Soft gamut compression. Values above threshold are smoothly
     compressed toward limit instead of hard-clipped.
@@ -33,10 +31,10 @@ def compress(rgb: np.ndarray, threshold: float = 0.8,
         above = x > threshold
         excess = x - threshold
         max_excess = limit - threshold
-        with np.errstate(divide='ignore', invalid='ignore'):
-            compressed = threshold + max_excess * np.power(
-                excess / (max_excess + 1e-10), 1.0 / power
-            ) * np.where(excess > 0, 1, 0)
+        with np.errstate(divide="ignore", invalid="ignore"):
+            compressed = threshold + max_excess * np.power(excess / (max_excess + 1e-10), 1.0 / power) * np.where(
+                excess > 0, 1, 0
+            )
         return np.where(above, np.minimum(compressed, limit), np.maximum(x, 0))
 
     result = np.empty_like(rgb)
@@ -125,6 +123,7 @@ def gamut_coverage(
     Returns:
         Coverage as fraction (0-1+). >1 means display exceeds target.
     """
+
     def _triangle_area(pts):
         n = len(pts)
         area = 0.0

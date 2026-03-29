@@ -17,6 +17,7 @@ import numpy as np
 
 try:
     from PIL import Image as PILImage
+
     _HAS_PILLOW = True
 except ImportError:
     _HAS_PILLOW = False
@@ -26,9 +27,7 @@ def _require_pillow() -> None:
     """Raise a helpful error if Pillow is not installed."""
     if not _HAS_PILLOW:
         raise ImportError(
-            "Pillow is required for image I/O. "
-            "Install it with: pip install Pillow  "
-            "(or: pip install quanta-color[all])"
+            "Pillow is required for image I/O. Install it with: pip install Pillow  (or: pip install quanta-color[all])"
         )
 
 
@@ -131,11 +130,14 @@ def save_image(
         r = PILImage.fromarray(arr[..., 0], mode="I;16")
         g = PILImage.fromarray(arr[..., 1], mode="I;16")
         b = PILImage.fromarray(arr[..., 2], mode="I;16")
-        img = PILImage.merge("RGB", [
-            r.convert("I"),
-            g.convert("I"),
-            b.convert("I"),
-        ])
+        img = PILImage.merge(
+            "RGB",
+            [
+                r.convert("I"),
+                g.convert("I"),
+                b.convert("I"),
+            ],
+        )
         # For 16-bit, use TIFF or PNG
         if ext in (".tif", ".tiff"):
             img.save(str(path), compression="tiff_deflate")

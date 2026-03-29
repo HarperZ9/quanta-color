@@ -13,19 +13,20 @@ Schemes:
     monochromatic       - Same hue, varied lightness/chroma
 """
 
-
 import numpy as np
 
 
 def _rgb_to_oklch(rgb: np.ndarray) -> np.ndarray:
     """Quick sRGB -> Oklch for harmony calculations."""
     from quanta_color.spaces import oklab_to_oklch, srgb_to_oklab
+
     return oklab_to_oklch(srgb_to_oklab(rgb))
 
 
 def _oklch_to_rgb(oklch: np.ndarray) -> np.ndarray:
     """Quick Oklch -> sRGB for harmony calculations."""
     from quanta_color.spaces import oklab_to_srgb, oklch_to_oklab
+
     return oklab_to_srgb(oklch_to_oklab(oklch))
 
 
@@ -87,7 +88,7 @@ def monochromatic(base_rgb: np.ndarray, count: int = 5) -> list[np.ndarray]:
     for i in range(count):
         c = lch.copy()
         c[0] = 0.15 + (0.85 - 0.15) * i / (count - 1)  # L from 0.15 to 0.85
-        c[1] = lch[1] * (0.5 + 0.5 * i / (count - 1))   # Vary chroma slightly
+        c[1] = lch[1] * (0.5 + 0.5 * i / (count - 1))  # Vary chroma slightly
         results.append(np.clip(_oklch_to_rgb(c), 0, 1))
     return results
 

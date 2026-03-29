@@ -34,6 +34,7 @@ import numpy as np
 @dataclass
 class LUT3D:
     """3D Lookup Table."""
+
     data: np.ndarray  # (size, size, size, 3) float64
     size: int
     title: str = ""
@@ -43,14 +44,14 @@ class LUT3D:
         expected = (self.size, self.size, self.size, 3)
         if self.data.shape != expected:
             raise ValueError(
-                f"LUT3D data shape {self.data.shape} does not match "
-                f"expected {expected} for size={self.size}"
+                f"LUT3D data shape {self.data.shape} does not match expected {expected} for size={self.size}"
             )
 
 
 @dataclass
 class LUT1D:
     """1D Lookup Table."""
+
     data: np.ndarray  # (size, 3) float64
     size: int
     title: str = ""
@@ -60,14 +61,14 @@ class LUT1D:
         expected = (self.size, 3)
         if self.data.shape != expected:
             raise ValueError(
-                f"LUT1D data shape {self.data.shape} does not match "
-                f"expected {expected} for size={self.size}"
+                f"LUT1D data shape {self.data.shape} does not match expected {expected} for size={self.size}"
             )
 
 
 # =============================================================================
 # .cube I/O
 # =============================================================================
+
 
 def read_cube(path: str | Path) -> LUT3D | LUT1D:
     """
@@ -141,22 +142,16 @@ def read_cube(path: str | Path) -> LUT3D | LUT1D:
     normalized = (raw - domain_min) / domain_range
 
     if lut_3d_size > 0:
-        expected = lut_3d_size ** 3
+        expected = lut_3d_size**3
         if len(normalized) != expected:
-            raise ValueError(
-                f"Expected {expected} data lines for 3D LUT size {lut_3d_size}, "
-                f"got {len(normalized)}"
-            )
+            raise ValueError(f"Expected {expected} data lines for 3D LUT size {lut_3d_size}, got {len(normalized)}")
         # .cube 3D order: R varies fastest, then G, then B
         data = normalized.reshape(lut_3d_size, lut_3d_size, lut_3d_size, 3)
         return LUT3D(data=data, size=lut_3d_size, title=title)
 
     elif lut_1d_size > 0:
         if len(normalized) != lut_1d_size:
-            raise ValueError(
-                f"Expected {lut_1d_size} data lines for 1D LUT, "
-                f"got {len(normalized)}"
-            )
+            raise ValueError(f"Expected {lut_1d_size} data lines for 1D LUT, got {len(normalized)}")
         return LUT1D(data=normalized, size=lut_1d_size, title=title)
 
     else:
@@ -164,7 +159,7 @@ def read_cube(path: str | Path) -> LUT3D | LUT1D:
         n = len(normalized)
         # Check if it's a perfect cube
         size = round(n ** (1.0 / 3.0))
-        if size ** 3 == n:
+        if size**3 == n:
             data = normalized.reshape(size, size, size, 3)
             return LUT3D(data=data, size=size, title=title)
         else:
@@ -219,6 +214,7 @@ def write_cube(lut: LUT3D | LUT1D, path: str | Path) -> None:
 # =============================================================================
 # CLF (Common LUT Format) I/O
 # =============================================================================
+
 
 def read_clf(path: str | Path) -> LUT3D:
     """
@@ -279,10 +275,8 @@ def read_clf(path: str | Path) -> LUT3D:
     if size == 0:
         size = round(n_triplets ** (1.0 / 3.0))
 
-    if size ** 3 != n_triplets:
-        raise ValueError(
-            f"Data count {n_triplets} does not match a valid 3D LUT size"
-        )
+    if size**3 != n_triplets:
+        raise ValueError(f"Data count {n_triplets} does not match a valid 3D LUT size")
 
     data = values.reshape(size, size, size, 3)
 
@@ -306,26 +300,37 @@ def write_clf(lut: LUT3D, path: str | Path) -> None:
     path = Path(path)
 
     ns = "urn:AMPAS:CLF:v3.0"
-    root = ET.Element("ProcessList", attrib={
-        "xmlns": ns,
-        "compCLFversion": "3.0",
-        "id": lut.title or "quanta_color_lut",
-    })
+    root = ET.Element(
+        "ProcessList",
+        attrib={
+            "xmlns": ns,
+            "compCLFversion": "3.0",
+            "id": lut.title or "quanta_color_lut",
+        },
+    )
 
     if lut.title:
         desc = ET.SubElement(root, "Description")
         desc.text = lut.title
 
-    lut3d_elem = ET.SubElement(root, "LUT3D", attrib={
-        "inBitDepth": "32f",
-        "outBitDepth": "32f",
-        "interpolation": "trilinear",
-    })
+    lut3d_elem = ET.SubElement(
+        root,
+        "LUT3D",
+        attrib={
+            "inBitDepth": "32f",
+            "outBitDepth": "32f",
+            "interpolation": "trilinear",
+        },
+    )
 
-    total = lut.size ** 3
-    array_elem = ET.SubElement(lut3d_elem, "Array", attrib={
-        "dim": f"{total} 3",
-    })
+    total = lut.size**3
+    array_elem = ET.SubElement(
+        lut3d_elem,
+        "Array",
+        attrib={
+            "dim": f"{total} 3",
+        },
+    )
 
     # Build data text
     lines = []
@@ -345,6 +350,7 @@ def write_clf(lut: LUT3D, path: str | Path) -> None:
 # =============================================================================
 # LUT generation and application
 # =============================================================================
+
 
 def identity_lut(size: int = 33) -> LUT3D:
     """
