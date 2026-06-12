@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "quanta-color"
 version = "1.0.0"
-description = "Professional color science library — tone mapping, color spaces, gamut mapping, HDR, spectral rendering"
+description = "Professional color science library - tone mapping, color spaces, gamut mapping, HDR, spectral rendering"
 readme = "README.md"
 license = {text = "MIT"}
 authors = [

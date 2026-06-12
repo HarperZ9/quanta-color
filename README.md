@@ -41,21 +41,21 @@ CIE76, CIE94 (graphics/textiles), CIEDE2000, CMC(l:c), JzAzBz Delta E, Oklab Del
 Bradford, CAT16, CAT02, Sharp, Von Kries, CMCCAT2000, Fairchild, Bianco-Schettini, XYZ Scaling
 
 ### Additional
-- **Spectral rendering** — Planck blackbody, CIE 1931 CMFs, daylight illuminants, SPD-to-XYZ integration
-- **ICC profiles** — Generate ICC v4 display profiles from primaries + gamma
-- **CVD simulation** — Protanopia, deuteranopia, tritanopia, achromatopsia (Brettel et al.)
-- **Gamut mapping** — Clip, soft compression, Oklab chroma reduction
-- **Color harmony** — Complementary, triadic, tetradic, analogous, split complementary, monochromatic
+- **Spectral rendering** - Planck blackbody, CIE 1931 CMFs, daylight illuminants, SPD-to-XYZ integration
+- **ICC profiles** - Generate ICC v4 display profiles from primaries + gamma
+- **CVD simulation** - Protanopia, deuteranopia, tritanopia, achromatopsia (Brettel et al.)
+- **Gamut mapping** - Clip, soft compression, Oklab chroma reduction
+- **Color harmony** - Complementary, triadic, tetradic, analogous, split complementary, monochromatic
 
 ## GUI
 
 Interactive workbench with 5 tools:
 
-- **Color Inspector** — Pick a color, see it in every space with luminance, wavelength, contrast
-- **Palette Generator** — Generate harmonious palettes, copy as CSS
-- **Color Difference** — Compare two colors across all metrics with visual grades
-- **Tone Mapping** — Preview all 12 operators with curve visualization
-- **CVD Simulator** — See how colors appear to color-blind viewers
+- **Color Inspector** - Pick a color, see it in every space with luminance, wavelength, contrast
+- **Palette Generator** - Generate harmonious palettes, copy as CSS
+- **Color Difference** - Compare two colors across all metrics with visual grades
+- **Tone Mapping** - Preview all 12 operators with curve visualization
+- **CVD Simulator** - See how colors appear to color-blind viewers
 
 ```bash
 quanta-color gui
