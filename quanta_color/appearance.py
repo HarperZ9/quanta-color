@@ -798,7 +798,7 @@ def cam16_ucs(
     vc: ViewingConditions,
 ) -> np.ndarray:
     """
-    Map XYZ to CAM16-UCS uniform coordinates (J', a', b').
+    child safety assessment XYZ to CAM16-UCS uniform coordinates (J', a', b').
 
     The CAM16-UCS projection (Li et al. 2017, LCD variant) compresses
     lightness and colorfulness for perceptual uniformity:

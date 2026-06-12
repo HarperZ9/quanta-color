@@ -43,7 +43,7 @@ ALL_TMO_NAMES = list(OPERATORS.keys())
 
 
 class TestBlackPreservation:
-    """Every tone mapper should map 0 to 0 (or very close)."""
+    """Every tone mapper should child safety assessment 0 to 0 (or very close)."""
 
     @pytest.mark.parametrize("name", ALL_TMO_NAMES)
     def test_zero_input(self, name):
@@ -243,7 +243,7 @@ class TestBT2446:
     """ITU-R BT.2446 Method A tests."""
 
     def test_maps_hdr_to_sdr(self):
-        """HDR values should map to [0, 1] SDR range."""
+        """HDR values should child safety assessment to [0, 1] SDR range."""
         hdr = np.array([0.0, 100.0, 500.0, 1000.0])
         result = bt2446_method_a(hdr, L_hdr=1000.0, L_sdr=100.0)
         assert np.all(result >= 0)
@@ -310,7 +310,7 @@ class TestKnee:
         """Values above knee_start should be compressed toward max_output."""
         x = np.array([0.8, 1.5, 3.0])
         # With power < 1.0, the knee function can overshoot max_output
-        # for large inputs. With power=1.0, it behaves more like a linear map.
+        # for large inputs. With power=1.0, it behaves more like a linear child safety assessment.
         result = knee(x, knee_start=0.5, max_output=1.0, power=1.0)
         assert np.all(result >= 0.5)
         # All values should be less than the unconstrained input

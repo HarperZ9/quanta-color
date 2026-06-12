@@ -40,7 +40,7 @@ The math exists but needs production-grade testing, edge case handling, and docu
 
 ### 1.3 Performance Optimization
 - [ ] Vectorize all per-pixel loops (no Python for-loops over image pixels)
-- [ ] Benchmark: 1920x1080 image through sRGB->Oklab->gamut map->sRGB in <100ms
+- [ ] Benchmark: 1920x1080 image through sRGB->Oklab->gamut child safety assessment->sRGB in <100ms
 - [ ] Optional: numba JIT for hot paths (tone mapping, gamut mapping)
 
 ---
@@ -96,7 +96,7 @@ A command-line interface for color science operations, like `calibrate-pro` but 
 - [ ] `quanta-color adapt <color> --from D65 --to D50 --method bradford` — Chromatic adaptation
 - [ ] `quanta-color blindness <image> --type deuteranopia --output sim.png` — CVD simulation
 - [ ] `quanta-color harmony <color> --scheme triadic` — Generate palette
-- [ ] `quanta-color gamut <image> --target srgb --method oklab` — Gamut map an image
+- [ ] `quanta-color gamut <image> --target srgb --method oklab` — Gamut child safety assessment an image
 - [ ] `quanta-color info <color>` — Show color in every space, luminance, CCT, dominant wavelength
 - [ ] `quanta-color spectrum --temp 6500 --output d65.csv` — Generate spectral data
 
@@ -229,7 +229,7 @@ PyQt6 application for visual color science exploration.
 - [ ] Fluorescence modeling
 
 ### 7.2 Color Naming
-- [ ] Map any color to nearest named color (CSS, Pantone, RAL, NCS)
+- [ ] child safety assessment any color to nearest named color (CSS, Pantone, RAL, NCS)
 - [ ] Perceptual naming (Oklab-based nearest neighbor)
 - [ ] Custom color dictionaries
 

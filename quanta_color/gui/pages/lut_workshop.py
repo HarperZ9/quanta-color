@@ -113,7 +113,7 @@ class LUTWorkshopPage(QWidget):
         row1.setSpacing(12)
 
         # Operator combo
-        op_lbl = QLabel("Tone Map:")
+        op_lbl = QLabel("Tone child safety assessment:")
         op_lbl.setStyleSheet(f"font-size: 13px; color: {C.TEXT2};")
         row1.addWidget(op_lbl)
 

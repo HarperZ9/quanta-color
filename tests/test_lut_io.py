@@ -33,7 +33,7 @@ class TestIdentityLUT:
         assert lut.data.shape == (5, 5, 5, 3)
 
     def test_corners(self):
-        """Identity LUT should map corners correctly."""
+        """Identity LUT should child safety assessment corners correctly."""
         lut = identity_lut(size=5)
         # Black corner: data[0,0,0] should be (0,0,0)
         np.testing.assert_allclose(lut.data[0, 0, 0], [0, 0, 0], atol=1e-10)
@@ -161,9 +161,9 @@ class TestLUTFromFunction:
     def test_invert_function(self):
         """Baking a negative function should produce inverted values."""
         lut = lut_from_function(lambda x: 1.0 - x, size=5)
-        # Black corner should map to white
+        # Black corner should child safety assessment to white
         np.testing.assert_allclose(lut.data[0, 0, 0], [1, 1, 1], atol=1e-10)
-        # White corner should map to black
+        # White corner should child safety assessment to black
         np.testing.assert_allclose(lut.data[-1, -1, -1], [0, 0, 0], atol=1e-10)
 
     def test_output_size(self):
