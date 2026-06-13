@@ -1,6 +1,9 @@
 # Quanta Color
 
-Professional color science library for Python. Tone mapping, color spaces, gamut mapping, HDR, spectral rendering, and more.
+Quanta Color is a Python color-science workbench for people who need more than
+hex conversion. It covers perceptual spaces, HDR tone mapping, color appearance
+models, Delta E metrics, chromatic adaptation, spectral utilities, ICC profile
+generation, and an optional GUI.
 
 ## Quick Start
 
