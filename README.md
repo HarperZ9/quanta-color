@@ -115,9 +115,10 @@ lab1 = np.array([50.0, 25.0, -10.0])
 lab2 = np.array([60.0, 20.0, -5.0])
 de = delta_e_2000(lab1, lab2)
 
-# Chromatic adaptation
+# Chromatic adaptation (adapt XYZ from D65 to D50)
 d65 = ILLUMINANTS["D65"]
 d50 = ILLUMINANTS["D50"]
+xyz = np.array([0.4596, 0.2985, 0.0614])
 adapted = adapt(xyz, d65, d50, method="cat16")
 
 # CIECAM02
@@ -141,8 +142,11 @@ quanta_color/
   gamut.py        Gamut mapping
   harmony.py      6 color harmony schemes
   cli.py          Command-line interface (8 commands)
-  gui.py          PyQt6 interactive workbench
+  gui/            PyQt6 interactive workbench
 ```
+
+See [USAGE.md](USAGE.md) for an install/build line, the full command and API
+reference, and worked examples with expected output.
 
 ## License
 
