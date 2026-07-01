@@ -1,0 +1,22 @@
+<svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Build Color mark">
+  <defs>
+    <linearGradient id="bc-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1b1030"/>
+      <stop offset="1" stop-color="#0c0a1a"/>
+    </linearGradient>
+    <radialGradient id="bc-wheel" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.9"/>
+      <stop offset="0.35" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="128" height="128" rx="26" fill="url(#bc-bg)"/>
+  <!-- gamut triangle -->
+  <polygon points="64,26 102,92 26,92" fill="none" stroke="#4636e8" stroke-width="3" stroke-linejoin="round" opacity="0.8"/>
+  <!-- primaries -->
+  <circle cx="64" cy="26" r="9" fill="#ff4d6d"/>
+  <circle cx="102" cy="92" r="9" fill="#38d39f"/>
+  <circle cx="26" cy="92" r="9" fill="#4d8bff"/>
+  <!-- white point -->
+  <circle cx="64" cy="70" r="14" fill="url(#bc-wheel)"/>
+  <circle cx="64" cy="70" r="4.5" fill="#ffffff"/>
+</svg>

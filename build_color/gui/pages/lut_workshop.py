@@ -29,7 +29,7 @@ class GradientPreview(QWidget):
     def __init__(self, width: int = 400, height: int = 40, parent=None):
         super().__init__(parent)
         self.setFixedSize(width, height)
-        self._mapped = None  # numpy array of mapped 0-1 values
+        self._mapped: np.ndarray | None = None  # numpy array of mapped 0-1 values
 
     def set_mapping(self, mapped: np.ndarray):
         """Set mapped output values (same length as pixel columns)."""
@@ -80,7 +80,7 @@ class LUTWorkshopPage(QWidget):
 
     def __init__(self, parent=None):
         super().__init__(parent)
-        self._lut_data = None
+        self._lut_data: np.ndarray | None = None
         self._lut_size = 33
         self._build_ui()
         self._update_preview()
@@ -336,12 +336,13 @@ class LUTWorkshopPage(QWidget):
 
         try:
             # Try library exporter first
-            from build_color.lut_io import write_clf, write_cube
+            from build_color.lut_io import LUT3D, write_clf, write_cube
 
+            lut3d = LUT3D(data=self._lut_data, size=self._lut_size)
             if fmt == "cube":
-                write_cube(path, self._lut_data, self._lut_size)
+                write_cube(lut3d, path)
             else:
-                write_clf(path, self._lut_data, self._lut_size)
+                write_clf(lut3d, path)
             self._status_label.setText(f"Exported to {path}")
         except ImportError:
             # Fallback: write basic .cube format manually

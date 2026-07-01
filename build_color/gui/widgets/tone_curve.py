@@ -23,8 +23,8 @@ class ToneCurve(QWidget):
     def __init__(self, width: int = 260, height: int = 260, parent=None):
         super().__init__(parent)
         self.setFixedSize(width, height)
-        self._input = []
-        self._output = []
+        self._input: list[float] = []
+        self._output: list[float] = []
 
     # --- Public API ---
 

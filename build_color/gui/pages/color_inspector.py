@@ -88,9 +88,13 @@ _CSS_COLORS = {
 def _nearest_css_name(r: int, g: int, b: int) -> str:
     """Find the closest CSS color name by Euclidean distance."""
     try:
+        import numpy as np
+
         from build_color.naming import nearest_css_name
 
-        return nearest_css_name(r, g, b)
+        rgb = np.array([r, g, b], dtype=np.float64) / 255.0
+        name, _distance = nearest_css_name(rgb)
+        return name
     except Exception:
         pass
     best_name = "black"

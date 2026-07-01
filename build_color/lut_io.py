@@ -260,16 +260,16 @@ def read_clf(path: str | Path) -> LUT3D:
     if not text:
         raise ValueError(f"Array element is empty in {path}")
 
-    values = []
+    raw_values: list[float] = []
     for line in text.strip().split("\n"):
         line = line.strip()
         if not line:
             continue
         parts = line.split()
         for p in parts:
-            values.append(float(p))
+            raw_values.append(float(p))
 
-    values = np.array(values, dtype=np.float64)
+    values = np.array(raw_values, dtype=np.float64)
     n_triplets = len(values) // 3
 
     if size == 0:
@@ -480,13 +480,13 @@ def lut_from_function(
     data = np.zeros((size, size, size, 3), dtype=np.float64)
 
     # Build all lattice points as a batch
-    points = []
+    raw_points: list[list[float]] = []
     for bi in range(size):
         for gi in range(size):
             for ri in range(size):
-                points.append([coords[ri], coords[gi], coords[bi]])
+                raw_points.append([coords[ri], coords[gi], coords[bi]])
 
-    points = np.array(points, dtype=np.float64)
+    points = np.array(raw_points, dtype=np.float64)
 
     # Try batch processing first
     try:

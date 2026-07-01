@@ -47,7 +47,7 @@ def load_image(path: str | Path) -> np.ndarray:
     _require_pillow()
     path = Path(path)
 
-    img = PILImage.open(path)
+    img: PILImage.Image = PILImage.open(path)
 
     # Determine bit depth from mode
     mode = img.mode

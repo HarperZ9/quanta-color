@@ -1,16 +1,20 @@
 <p align="center">
-  <img src="docs/brand/build-color-hero.png" alt="Build Color: Color Science Workbench">
+  <img src="docs/brand/build-color-hero.png" alt="Build Color, a Python color-science workbench">
 </p>
+<!-- Project mark: docs/brand/build-color-mark.svg -->
 
 # Build Color
 
 > Python color-science workbench for perceptual spaces, HDR tone mapping, color appearance models, Delta E metrics, chromatic adaptation, spectral utilities, and ICC profile generation.
 
-[![license: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-![python](https://img.shields.io/badge/python-3.10%2B-blue.svg)
-![version](https://img.shields.io/badge/version-1.0.1-informational.svg)
+[Project Telos](https://harperz9.github.io) | [gather](https://github.com/HarperZ9/gather) | [crucible](https://github.com/HarperZ9/crucible) | [index](https://github.com/HarperZ9/index) | [forum](https://github.com/HarperZ9/forum) | [telos](https://github.com/HarperZ9/telos) | [emet](https://github.com/HarperZ9/emet) | [buildlang](https://github.com/HarperZ9/buildlang)
+
 [![CI](https://github.com/HarperZ9/build-color/actions/workflows/ci.yml/badge.svg)](https://github.com/HarperZ9/build-color/actions/workflows/ci.yml)
-[![part of: Build apps](https://img.shields.io/badge/part_of-Build_apps-c0468a.svg)](https://github.com/HarperZ9/build-universe)
+![version: 1.0.1](https://img.shields.io/badge/version-1.0.1-informational.svg)
+![python: 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)
+![core dep: numpy](https://img.shields.io/badge/core%20dep-numpy-success.svg)
+[![license: fair-source](https://img.shields.io/badge/license-fair--source-blue.svg)](LICENSE)
+[![part of: Project Telos](https://img.shields.io/badge/part_of-Project_Telos-4636e8.svg)](https://harperz9.github.io)
 
 Build Color is a Python color-science workbench for people who need more than
 hex conversion. It covers perceptual spaces, HDR tone mapping, color appearance
@@ -154,4 +158,8 @@ reference, and worked examples with expected output.
 
 ## License
 
-Copyright (c) 2022-2026 Zain Dana Harper. All rights reserved. See [LICENSE](LICENSE).
+Build Color is released under the FSL-1.1-MIT.
+The source is source-available: you may read, run, modify, and build on it for
+any purpose other than a competing commercial use, which is reserved to the
+Licensor to fund continued development. Copyright (c) 2022-2026 Zain Dana Harper.
+All rights reserved. See [LICENSE](LICENSE).
